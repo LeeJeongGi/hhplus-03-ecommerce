@@ -6,18 +6,18 @@ sequenceDiagram
     participant Client
     participant API
     participant UserService
-    participant PointManager
+    participant BalanceManager
     participant DB
 
     Client ->> API:잔액 충전 요청
     alt 존재하는 유저
         API ->> UserService: 유저 인증(등록된 유저 인지 검증)
-        UserService ->> PointManager: 잔액 충전 요청
-        PointManager ->> DB: 유저의 현재 잔액 조회
-        DB ->> PointManager: 현재 잔액
-        PointManager ->> DB: 유저의 잔액 업데이트
-        DB ->> PointManager: 잔액 업데이트 완료
-        PointManager ->> API: 유저의 충전된 잔액 정보
+        UserService ->> BalanceManager: 잔액 충전 요청
+        BalanceManager ->> DB: 유저의 현재 잔액 조회
+        DB ->> BalanceManager: 현재 잔액
+        BalanceManager ->> DB: 유저의 잔액 업데이트
+        DB ->> BalanceManager: 잔액 업데이트 완료
+        BalanceManager ->> API: 유저의 충전된 잔액 정보
         API ->> Client: 충전 성공 메세지, 충전 결과 정보
     else
         UserService ->> API: 잔액 충전 실패(존재하지 않는 유저)
@@ -35,16 +35,16 @@ sequenceDiagram
     participant Client
     participant API
     participant UserService
-    participant PointManager
+    participant BalanceManager
     participant DB
 
     Client ->> API:잔액 조회 요청
     alt 존재하는 유저
         API ->> UserService: 유저 인증(등록된 유저 인지 검증)
-        UserService ->> PointManager: 잔액 조회 요청
-        PointManager ->> DB: 유저의 현재 잔액 조회
-        DB ->> PointManager: 현재 잔액 정보
-        PointManager ->> API: 유저의 잔액 정보
+        UserService ->> BalanceManager: 잔액 조회 요청
+        BalanceManager ->> DB: 유저의 현재 잔액 조회
+        DB ->> BalanceManager: 현재 잔액 정보
+        BalanceManager ->> API: 유저의 잔액 정보
         API ->> Client: 성공 메세지, 유저의 잔액 정보 전달
     else
         UserService ->> API: 잔액 조회 실패(존재하지 않는 유저)
@@ -112,7 +112,7 @@ sequenceDiagram
     participant API
     participant ProductManager
     participant UserService
-    participant PointManager
+    participant BalanceManager
     participant DB
     
     Client ->> API: 상품 결제 요청
@@ -127,13 +127,13 @@ sequenceDiagram
             UserService ->> API: 유저 정보와 보유 잔액 정보
             
             alt 결제 요청
-                API ->> PointManager: 결제 금액만큼 포인트 차감 요청
-                PointManager ->> DB: 차감된 유저의 포인트 업데이트 요청
+                API ->> BalanceManager: 결제 금액만큼 포인트 차감 요청
+                BalanceManager ->> DB: 차감된 유저의 포인트 업데이트 요청
                 DB ->> PointManger: 결제 후 유저의 포인트 정보
-                PointManager ->> API: 최종 유저의 포인트 정보
+                BalanceManager ->> API: 최종 유저의 포인트 정보
                 API ->> Client: 성공 메세지, 결제 완료한 회원 정보 전달
             else
-                PointManager ->> API: 결제 실패(금액이 부족합니다.)
+                BalanceManager ->> API: 결제 실패(금액이 부족합니다.)
                 API ->> Client: 오류 메시지 반환(잔액이 부족합니다.)
             end
             
