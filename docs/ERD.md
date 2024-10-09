@@ -29,6 +29,7 @@ erDiagram
     ProductStock {
         BIGINT id PK "재고 고유 ID"
         BIGINT product_id FK "상품 ID"
+        VARCHAR size "상품 사이즈"
         INT quantity "남은 수량"
         TIMESTAMP created_at "생성일"
         TIMESTAMP updated_at "업데이트일"
