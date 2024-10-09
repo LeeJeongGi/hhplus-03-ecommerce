@@ -1,4 +1,4 @@
-package com.hhplus.e_commerce.common
+package com.hhplus.e_commerce.common.error.response
 
 class ErrorResponse(
     val code: String,

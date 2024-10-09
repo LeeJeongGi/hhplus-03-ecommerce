@@ -34,7 +34,7 @@ sealed interface ErrorCode {
         BAD_REQUEST_BALANCE(HttpStatus.BAD_REQUEST, "BALANCE001", "잘못된 잔액 충전 요청입니다."),
     }
 
-    enum class PRODUCT(
+    enum class Product(
         override val httpStatus: HttpStatus,
         override val errorCode: String,
         override val message: String,

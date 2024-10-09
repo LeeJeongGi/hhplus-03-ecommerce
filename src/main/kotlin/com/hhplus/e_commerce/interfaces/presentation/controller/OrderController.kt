@@ -1,6 +1,6 @@
 package com.hhplus.e_commerce.interfaces.presentation.controller
 
-import com.hhplus.e_commerce.common.ErrorResponse
+import com.hhplus.e_commerce.common.error.response.ErrorResponse
 import com.hhplus.e_commerce.common.error.exception.BusinessException
 import com.hhplus.e_commerce.interfaces.presentation.request.OrderRequest
 import com.hhplus.e_commerce.interfaces.presentation.response.OrderProduct
