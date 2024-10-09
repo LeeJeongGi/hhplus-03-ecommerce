@@ -5,6 +5,8 @@ import com.hhplus.e_commerce.common.error.exception.BusinessException
 import com.hhplus.e_commerce.interfaces.presentation.request.OrderRequest
 import com.hhplus.e_commerce.interfaces.presentation.response.OrderProduct
 import com.hhplus.e_commerce.interfaces.presentation.response.OrderResponse
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -19,6 +21,10 @@ class OrderController {
     /**
      * 5. 주문 결제 API
      */
+    @Operation(summary = "주문 결제", description = "사용자가 주문을 결제합니다.")
+    @ApiResponse(responseCode = "200", description = "주문 결제 성공")
+    @ApiResponse(responseCode = "404", description = "주문 정보를 찾을 수 없음")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @PostMapping
     fun placeOrder(@RequestBody request: OrderRequest): ResponseEntity<Any> {
         return try {

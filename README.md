@@ -6,6 +6,7 @@
 2. [이벤트 시퀀스 다이어그램](./docs/EventSequence.md)
 3. [ERD](./docs/ERD.md)
 4. [API 명세 문서](./docs/Api_Docs.md)
+5. [Swagger 문서](./docs/Swagger.md)
 
 ## 기술 스택
 
