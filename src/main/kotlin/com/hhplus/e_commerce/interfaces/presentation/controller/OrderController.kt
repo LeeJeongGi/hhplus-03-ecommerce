@@ -1,6 +1,7 @@
 package com.hhplus.e_commerce.interfaces.presentation.controller
 
 import com.hhplus.e_commerce.common.ErrorResponse
+import com.hhplus.e_commerce.common.error.exception.BusinessException
 import com.hhplus.e_commerce.interfaces.presentation.request.OrderRequest
 import com.hhplus.e_commerce.interfaces.presentation.response.OrderProduct
 import com.hhplus.e_commerce.interfaces.presentation.response.OrderResponse
@@ -42,11 +43,15 @@ class OrderController {
                 )
             )
             ResponseEntity.ok(orderResponse)
-        } catch (e: Exception) {
-            // 예외가 발생한 경우 적절한 오류 메시지를 포함하여 응답합니다.
+        } catch (e: BusinessException.NotFound) {
             ResponseEntity(
-                e.message?.let { ErrorResponse(code = 500, message = it) },
-                HttpStatus.INTERNAL_SERVER_ERROR
+                ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message),
+                HttpStatus.NOT_FOUND
+            )
+        } catch (e: BusinessException.BadRequest) {
+            ResponseEntity(
+                ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message),
+                HttpStatus.BAD_REQUEST
             )
         }
     }

@@ -21,6 +21,17 @@
   "balance" : 5000
 }
 ```
+
+
+### Error
+```json
+{
+  "code": 404,
+  "message": "user not found"
+}
+```
+
+
 ---
 ## 2. 잔액 조회 API
 
@@ -38,6 +49,14 @@
   "balance" : 2000
 }
 ```
+### Error
+```json
+{
+  "code": 404,
+  "message": "user not found"
+}
+```
+
 ---
 ## 3. 상품 조회 API
 
@@ -58,6 +77,15 @@
   "stockQuantity": 10
 }
 ```
+
+### Error
+```json
+{
+  "code": 404,
+  "message": "product not found"
+}
+```
+
 ---
 ## 4. 상위 TOP5 상품 조회 API
 
@@ -92,6 +120,16 @@
   ]
 }
 ```
+
+### Error
+```json
+{
+  "code": 400,
+  "message": "invalid parameters"
+}
+```
+
+
 ---
 ## 5. 주문 결제 API
 
@@ -139,6 +177,36 @@
   ]
 }
 ```
+### Error
+```json
+{
+  "code": 404,
+  "message": "product not found"
+}
+```
+### Error
+```json
+{
+  "code": 404,
+  "message": "user not found"
+}
+```
+### Error
+```json
+{
+  "code": 500,
+  "message": "user not money"
+}
+```
+### Error
+```json
+{
+  "code": 404,
+  "message": "order not found"
+}
+```
+
+
 ---
 ## 6. 장바구니 상품 조회 API
 
@@ -164,6 +232,16 @@
   ]
 }
 ```
+
+### Error
+```json
+{
+  "code": 404,
+  "message": "user not found"
+}
+```
+
+
 ## 7. 장바구니 상품 추가/삭제 API
 
 ### Request
@@ -197,5 +275,13 @@
       "quantity": 1
     }
   ]
+}
+```
+
+### Error
+```json
+{
+  "code": 404,
+  "message": "user not found"
 }
 ```

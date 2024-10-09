@@ -1,6 +1,7 @@
 package com.hhplus.e_commerce.interfaces.presentation.controller
 
 import com.hhplus.e_commerce.common.ErrorResponse
+import com.hhplus.e_commerce.common.error.exception.BusinessException
 import com.hhplus.e_commerce.interfaces.presentation.response.ProductResponse
 import com.hhplus.e_commerce.interfaces.presentation.response.ProductSummary
 import com.hhplus.e_commerce.interfaces.presentation.response.TopProductsResponse
@@ -28,11 +29,8 @@ class ProductController {
                 stockQuantity = 10
             )
             ResponseEntity.ok(productResponse)
-        } catch (e: Exception) {
-            ResponseEntity(
-                e.message?.let { ErrorResponse(code = 404, message = it) },
-                HttpStatus.NOT_FOUND
-            )
+        } catch (e: BusinessException.NotFound) {
+            ResponseEntity(ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message), HttpStatus.NOT_FOUND)
         }
     }
 
@@ -63,11 +61,8 @@ class ProductController {
             ).take(limit) // limit 수만큼 상품 정보 반복
 
             ResponseEntity.ok(TopProductsResponse(topProducts))
-        } catch (e: Exception) {
-            ResponseEntity(
-                e.message?.let { ErrorResponse(code = 500, message = it) },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+        } catch (e: BusinessException.NotFound) {
+            ResponseEntity(ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message), HttpStatus.NOT_FOUND)
         }
     }
 }

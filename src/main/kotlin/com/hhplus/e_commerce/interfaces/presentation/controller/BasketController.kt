@@ -1,6 +1,7 @@
 package com.hhplus.e_commerce.interfaces.presentation.controller
 
 import com.hhplus.e_commerce.common.ErrorResponse
+import com.hhplus.e_commerce.common.error.exception.BusinessException
 import com.hhplus.e_commerce.interfaces.presentation.request.BasketUpdateRequest
 import com.hhplus.e_commerce.interfaces.presentation.response.BasketItem
 import com.hhplus.e_commerce.interfaces.presentation.response.BasketResponse
@@ -27,11 +28,8 @@ class BasketController {
                 )
             )
             ResponseEntity.ok(basketResponse)
-        } catch (e: Exception) {
-            ResponseEntity(
-                e.message?.let { ErrorResponse(code = 500, message = it) },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+        } catch (e: BusinessException.NotFound) {
+            ResponseEntity(ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message), HttpStatus.NOT_FOUND)
         }
     }
 
@@ -52,11 +50,8 @@ class BasketController {
                 )
             )
             ResponseEntity.ok(basketResponse)
-        } catch (e: Exception) {
-            ResponseEntity(
-                e.message?.let { ErrorResponse(code = 500, message = it) },
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+        } catch (e: BusinessException.NotFound) {
+            ResponseEntity(ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message), HttpStatus.NOT_FOUND)
         }
     }
 }
