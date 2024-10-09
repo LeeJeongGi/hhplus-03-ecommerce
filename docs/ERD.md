@@ -38,6 +38,7 @@ erDiagram
     Order {
         BIGINT id PK "주문 고유 ID"
         BIGINT user_id FK "유저 ID"
+        VARCHAR status "주문 상태(결제 진행 중, 결제 완료)"
         TIMESTAMP payment_date "결제일"
         DECIMAL total_amount "총 결제 금액"
     }
