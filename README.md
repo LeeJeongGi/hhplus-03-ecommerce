@@ -30,6 +30,7 @@ src/main/kotlin/com/hhplus/e_commerce
 ├── business
 │   └── entity
 ├── common
+│   └── config
 │   └── error
 │       ├── code
 │       ├── exception
