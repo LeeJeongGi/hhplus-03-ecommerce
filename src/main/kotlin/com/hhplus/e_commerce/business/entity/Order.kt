@@ -9,11 +9,11 @@ class Order(
     @Column(name = "user_id", nullable = false)
     val userId: Long,
 
-    @Column(name = "payment_date", nullable = false)
-    val paymentDate: LocalDateTime,
-
     @Column(name = "total_amount", nullable = false)
     val totalAmount: Long,
+
+    @Column(name = "order_date", nullable = false)
+    val orderDate: LocalDateTime,
 ): BaseEntity() {
 
     @Id
