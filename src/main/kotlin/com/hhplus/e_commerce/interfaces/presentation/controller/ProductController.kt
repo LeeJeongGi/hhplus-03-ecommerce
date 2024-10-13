@@ -1,7 +1,8 @@
 package com.hhplus.e_commerce.interfaces.presentation.controller
 
-import com.hhplus.e_commerce.common.error.response.ErrorResponse
+import com.hhplus.e_commerce.business.facade.ProductFacade
 import com.hhplus.e_commerce.common.error.exception.BusinessException
+import com.hhplus.e_commerce.common.error.response.ErrorResponse
 import com.hhplus.e_commerce.interfaces.presentation.response.ProductResponse
 import com.hhplus.e_commerce.interfaces.presentation.response.ProductSummary
 import com.hhplus.e_commerce.interfaces.presentation.response.TopProductsResponse
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/v1/products")
-class ProductController {
+class ProductController(
+    private val productFacade: ProductFacade
+) {
 
     /**
      * 3. 상품 조회 API
@@ -24,19 +27,9 @@ class ProductController {
     @GetMapping("/{productId}")
     fun getProduct(
         @PathVariable productId: Long
-    ): ResponseEntity<Any> {
-        return try {
-            val productResponse = ProductResponse(
-                productId = productId,
-                name = "상품명",
-                category = "카테고리",
-                price = 20000,
-                stockQuantity = 10
-            )
-            ResponseEntity.ok(productResponse)
-        } catch (e: BusinessException.NotFound) {
-            ResponseEntity(ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message), HttpStatus.NOT_FOUND)
-        }
+    ): ResponseEntity<ProductResponse> {
+        val productInfo = productFacade.getProduct(productId)
+        return ResponseEntity.ok(ProductResponse.from(productInfo))
     }
 
     /**
