@@ -131,24 +131,24 @@ sequenceDiagram
     participant API
     participant OrderFacade
     participant ProductService
-    participant UserService
+    participant BalanceService
     participant OrderService
     participant DB
     
     Client ->> API: 상품 주문 요청
     alt 존재하는 상품
     
-        API ->> OrderFacade: 존재하는 상품인지 조회 요청
+        API ->> OrderFacade: 상품 주문 요청
         OrderFacade ->> ProductService: 존재하는 상품인지 조회 요청 그리고 재고가 있는지 요청
         ProductService ->> DB: 상품 조회 및 재고 확인
         DB ->> ProductService: 상품 정보 (상품 ID, 상품 재고)
         ProductService ->> OrderFacade: 상품 정보 (상품 ID, 상품 재고)
     
         alt 존재하는 유저
-            OrderFacade ->> UserService: 결제 요청한 회원 조회
-            UserService ->> DB: 회원 존재 유무 그리고 회원의 보유 잔액 조회 요청
-            DB ->> UserService: 회원 잔액과 정보를 전달
-            UserService ->> OrderFacade: 유저 정보와 보유 잔액 정보
+            OrderFacade ->> BalanceService: 결제 요청한 회원 조회
+            BalanceService ->> DB: 회원 존재 유무 그리고 회원의 보유 잔액 조회 요청
+            DB ->> BalanceService: 회원 잔액과 정보를 전달
+            BalanceService ->> OrderFacade: 유저 정보와 보유 잔액 정보
             
             OrderFacade ->> OrderService: 주문 정보 저장 요청
             OrderService ->> DB: 주문 정보 저장
@@ -161,7 +161,7 @@ sequenceDiagram
             ProductService ->> OrderFacade: 재고 정보 업데이트 정보 전달
             
         else
-            UserService ->> OrderFacade: 잔액 조회 실패(존재하지 않는 유저 또는 잔액 부족)
+            BalanceService ->> OrderFacade: 잔액 조회 실패(존재하지 않는 유저 또는 잔액 부족)
             OrderFacade ->> API: 잔액 조회 실패(존재하지 않는 유저 또는 잔액 부족)
             API ->> Client: 오류 메시지 반환(존재하지 않는 유저 입니다. 또는 잔액 부족 입니다.)
         end
