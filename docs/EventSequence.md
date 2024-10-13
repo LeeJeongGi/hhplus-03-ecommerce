@@ -81,7 +81,11 @@ sequenceDiagram
         ProductFacade ->> ProductService: 상품 인증(등록된 상품 인지 검증)
         ProductService ->> DB: 상품 조회
         DB ->> ProductService: 상품 정보 (ID, 이름, 가격, 잔여수량)
-        ProductService ->> ProductFacade: 상품 메타 정보 (ID, 이름, 가격, 잔여수량)
+        ProductService ->> ProductFacade: 상품 메타 정보 (ID, 이름, 가격)
+        ProductFacade ->> ProductService: 상품 서브 정보 요청 (사이즈, 잔여 수량)
+        ProductService ->> DB: 상품 서브 정보 요청
+        DB ->> ProductService: 상품 서브 정보 전달
+        ProductService ->> ProductFacade: 상품 서브 정보 전달
         ProductFacade ->> API: 상품 메타 정보 (ID, 이름, 가격, 잔여수량)
         API ->> Client: 성공 메세지, 상품 정보 전달
     else

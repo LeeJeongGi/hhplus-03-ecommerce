@@ -8,7 +8,11 @@ class ProductStock(
     @Column(name = "product_id", nullable = false)
     val productId: Long,
 
+    @Column(name = "size", nullable = false)
+    val size: String,
+
     quantity: Int,
+
 ): BaseEntity() {
 
     @Id

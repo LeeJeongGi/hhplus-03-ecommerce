@@ -74,7 +74,16 @@
   "name": "상품명",
   "category": "카테고리",
   "price": 20000,
-  "stockQuantity": 10
+  "stockQuantities": [
+    {
+      "size": "L",
+      "quantity": 2
+    },
+    {
+      "size": "M",
+      "quantity": 3
+    }
+  ]
 }
 ```
 

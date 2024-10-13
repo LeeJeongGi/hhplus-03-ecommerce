@@ -9,8 +9,8 @@ class Product(
     @Column(name = "name", nullable = false)
     val name: String,
 
-    @Enumerated(EnumType.STRING) @Column(name = "category", nullable = false)
-    val category: ProductCategory,
+    @Column(name = "category")
+    val category: String,
 
     @Column(name = "price", nullable = false)
     val price: Int,
