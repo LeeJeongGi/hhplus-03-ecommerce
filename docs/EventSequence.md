@@ -156,8 +156,6 @@ sequenceDiagram
             DB ->> ProductService: 재고 정보 업데이트 정보 전달
             ProductService ->> OrderFacade: 재고 정보 업데이트 정보 전달
             
-            Note over OrderFacade,API: 결제 프로세스 진행 (별도 시퀀스)
-            
         else
             UserService ->> OrderFacade: 잔액 조회 실패(존재하지 않는 유저 또는 잔액 부족)
             OrderFacade ->> API: 잔액 조회 실패(존재하지 않는 유저 또는 잔액 부족)
