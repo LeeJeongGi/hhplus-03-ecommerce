@@ -9,8 +9,11 @@ class Order(
     @Column(name = "user_id", nullable = false)
     val userId: Long,
 
+    @Column(name = "status", nullable = false)
+    val status: String,
+
     @Column(name = "total_amount", nullable = false)
-    val totalAmount: Long,
+    val totalAmount: Int,
 
     @Column(name = "order_date", nullable = false)
     val orderDate: LocalDateTime,
@@ -18,6 +21,6 @@ class Order(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0
+    var id: Long = 0
 
 }
