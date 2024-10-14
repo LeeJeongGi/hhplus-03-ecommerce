@@ -152,13 +152,13 @@
 ```json
 {
   "userId": 1,
-  "products": [
+  "productStocks": [
     {
-      "productId": 123,
+      "productStockId": 123,
       "quantity": 2
     },
     {
-      "productId": 456,
+      "productStockId": 456,
       "quantity": 1
     }
   ]
@@ -168,22 +168,9 @@
 ### Response Body
 ```json
 {
-  "balance": 20000,
+  "userId": 1,
   "orderId": 789,
-  "products": [
-    {
-      "productId": 123,
-      "quantity": 2,
-      "price": 30000,
-      "totalAmount": 60000
-    },
-    {
-      "productId": 456,
-      "quantity": 1,
-      "price": 15000,
-      "totalAmount": 15000
-    }
-  ]
+  "totalAmount": 60000
 }
 ```
 ### Error

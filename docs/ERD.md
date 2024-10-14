@@ -70,7 +70,6 @@ erDiagram
         BIGINT order_id FK "주문 ID"
         BIGINT product_stock_id FK "상품 ID"
         INT quantity "수량"
-        DECIMAL amount "결제 금액"
     }
     
     Payment {
