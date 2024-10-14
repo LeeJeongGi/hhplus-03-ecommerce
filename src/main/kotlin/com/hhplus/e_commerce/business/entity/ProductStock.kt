@@ -23,4 +23,7 @@ class ProductStock(
     var quantity: Int = quantity
         private set
 
+    fun updateQuantity(newQuantity: Int) {
+        this.quantity = newQuantity
+    }
 }
