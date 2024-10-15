@@ -1,21 +1,19 @@
 package com.hhplus.e_commerce.interfaces.presentation.controller
 
 import com.hhplus.e_commerce.business.facade.ProductFacade
-import com.hhplus.e_commerce.common.error.exception.BusinessException
-import com.hhplus.e_commerce.common.error.response.ErrorResponse
+import com.hhplus.e_commerce.business.service.ProductService
 import com.hhplus.e_commerce.interfaces.presentation.response.ProductResponse
 import com.hhplus.e_commerce.interfaces.presentation.response.ProductSummary
-import com.hhplus.e_commerce.interfaces.presentation.response.TopProductsResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/v1/products")
 class ProductController(
-    private val productFacade: ProductFacade
+    private val productFacade: ProductFacade,
+    private val productService: ProductService,
 ) {
 
     /**
@@ -42,28 +40,9 @@ class ProductController(
     fun getTopProducts(
         @RequestParam("limit") limit: Int,
         @RequestParam(value = "days", defaultValue = "3") days: Int
-    ): ResponseEntity<Any> {
-        return try {
-            val topProducts = listOf(
-                ProductSummary(
-                    productId = 123,
-                    name = "상품명1",
-                    category = "카테고리",
-                    price = 15000,
-                    salesCount = 100
-                ),
-                ProductSummary(
-                    productId = 456,
-                    name = "상품명2",
-                    category = "카테고리",
-                    price = 12000,
-                    salesCount = 85
-                )
-            ).take(limit) // limit 수만큼 상품 정보 반복
-
-            ResponseEntity.ok(TopProductsResponse(topProducts))
-        } catch (e: BusinessException.NotFound) {
-            ResponseEntity(ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message), HttpStatus.NOT_FOUND)
-        }
+    ): ResponseEntity<List<ProductSummary>> {
+        val products = productService.getTop5Products(limit, days)
+        val result = products.map { ProductSummary.from(it) }
+        return ResponseEntity.ok(result)
     }
 }

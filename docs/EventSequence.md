@@ -100,17 +100,14 @@ sequenceDiagram
 sequenceDiagram
     participant Client
     participant API
-    participant ProductFacade
     participant ProductService
     participant DB
 
     Client ->> API: 주간 TOP5 상품 조회 요청
-    API ->> ProductFacade: 랭킹 TOP5 상품 조회 요청
-    ProductFacade ->> ProductService: 랭킹 TOP5 상품 조회 요청
+    API ->> ProductService: 랭킹 TOP5 상품 조회 요청
     ProductService ->> DB: 랭킹 테이블에서 TOP5 상품 정보 조회
     DB ->> ProductService: 랭킹 테이블에서 TOP5 상품 정보 전달
-    ProductService ->> ProductFacade: 랭킹 TOP5 상품 정보 리스트로 전달
-    ProductFacade ->> API: 랭킹 TOP5 상품 정보 리스트로 전달
+    ProductService ->> API: 랭킹 TOP5 상품 정보 리스트로 전달
     API ->> Client: 성공 메세지, 상위 랭킹 상품 정보 리스트로 전달
 
 ```
