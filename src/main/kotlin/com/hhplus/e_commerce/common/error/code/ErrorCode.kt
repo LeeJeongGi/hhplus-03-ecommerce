@@ -50,5 +50,6 @@ sealed interface ErrorCode {
         override val message: String,
     ) : ErrorCode {
         NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "ORDER001", "주문 이력을 찾을 수 없습니다."),
+        INVALID_ORDER_STATUS(HttpStatus.BAD_REQUEST, "ORDER002", "주문 완료된 주문 번호가 아닙니다."),
     }
 }
