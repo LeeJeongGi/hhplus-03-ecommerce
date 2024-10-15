@@ -97,4 +97,22 @@ class BalanceServiceTest {
         // then
         assertThat(message).isEqualTo(ErrorCode.User.NOT_FOUND_USER.message)
     }
+
+    @Test
+    @DisplayName("유저 잔액 변경 성공 테스트 - 유저의 잔액이 1000원 있을 때 500원 상품을 산 후 남은 잔액이 500원인지 검증하는 테스트")
+    fun changeBalanceTest() {
+        // given
+        val userId = 1L
+        val user = UserStub.create("User")
+        val balance = BalanceStub.create(user, 1000)
+
+        every { balanceRepository.findByUserId(userId) } returns balance
+        every { balanceRepository.save(balance) } returns balance  // save 메서드 모킹 추가
+
+        // when
+        val userBalance = balanceService.changeBalance(userId, 500)
+
+        // then
+        assertThat(userBalance.currentAmount).isEqualTo(balance.amount)
+    }
 }
