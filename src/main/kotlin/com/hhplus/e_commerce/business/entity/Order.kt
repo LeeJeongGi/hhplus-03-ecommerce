@@ -9,8 +9,7 @@ class Order(
     @Column(name = "user_id", nullable = false)
     val userId: Long,
 
-    @Column(name = "status", nullable = false)
-    val status: String,
+    status: String,
 
     @Column(name = "total_amount", nullable = false)
     val totalAmount: Int,
@@ -23,4 +22,11 @@ class Order(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
+    @Column(name = "status", nullable = false)
+    var status: String = status
+        protected set
+
+    fun updateStatus(status: String) {
+        this.status = status
+    }
 }

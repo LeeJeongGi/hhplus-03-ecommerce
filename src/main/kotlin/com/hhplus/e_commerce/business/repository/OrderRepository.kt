@@ -10,4 +10,6 @@ interface OrderRepository {
 
     fun deleteAll()
 
+    fun findByOrderIdWithLock(orderId: Long): Order?
+
 }

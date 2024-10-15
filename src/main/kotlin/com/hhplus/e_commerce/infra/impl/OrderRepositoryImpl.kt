@@ -20,4 +20,8 @@ class OrderRepositoryImpl(
     override fun deleteAll() {
         orderJpaRepository.deleteAll()
     }
+
+    override fun findByOrderIdWithLock(orderId: Long): Order? {
+        return orderJpaRepository.findByOrderIdWithLock(orderId)
+    }
 }
