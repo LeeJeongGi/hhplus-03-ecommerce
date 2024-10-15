@@ -184,40 +184,40 @@ sequenceDiagram
     participant 외부 API
     participant Client
     participant API
-    participant OrderFacade
+    participant PaymentFacade
     participant OrderService
     participant UserService
     participant BalanceService
     participant DB
 
     Client ->> API: 상품 결제 요청
-    API ->> OrderFacade: 상품 결제 요청
-    OrderFacade ->> OrderService: 주문 정보 요청
+    API ->> PaymentFacade: 상품 결제 요청
+    PaymentFacade ->> OrderService: 주문 정보 요청
     alt 주문 정보가 완료
         OrderService ->> DB: 주문 정보 요청
         DB ->> OrderService: 주문 정보 전달
-        OrderService ->> OrderFacade: 주문 정보 전달
+        OrderService ->> PaymentFacade: 주문 정보 전달
 
-        OrderFacade ->> UserService: 유저 잔액 조회
+        PaymentFacade ->> UserService: 유저 잔액 조회
         UserService ->> DB: 유저 잔액 조회
         DB ->> UserService: 유저 보유 잔액 전달
-        UserService ->> OrderFacade: 유저 보유 잔액 전달
+        UserService ->> PaymentFacade: 유저 보유 잔액 전달
         
-        OrderFacade ->> BalanceService: 주문한 상품 가격만큼 잔액 차감 요청
+        PaymentFacade ->> BalanceService: 주문한 상품 가격만큼 잔액 차감 요청
         BalanceService ->> DB: 주문한 상품 가격만큼 잔액 차감 요청
         DB ->> BalanceService: 잔액 업데이트 완료
-        BalanceService ->> OrderFacade: 잔액 업데이트 완료
+        BalanceService ->> PaymentFacade: 잔액 업데이트 완료
         
-        OrderFacade ->> OrderService: 주문 정보에 결제 상태 업데이트 요청
+        PaymentFacade ->> OrderService: 주문 정보에 결제 상태 업데이트 요청
         OrderService ->> DB: 주문 정보에 결제 상태 업데이트 요청
         DB ->> OrderService: 주문 정보에 결제 상태 업데이트 결과 전달
-        OrderService ->> OrderFacade: 주문 정보에 결제 상태 업데이트 결과 전달
+        OrderService ->> PaymentFacade: 주문 정보에 결제 상태 업데이트 결과 전달
 
-        Note over OrderFacade, 외부 API: 주문 정보를 데이터 플랫폼에 전송(외부)
+        Note over PaymentFacade, 외부 API: 주문 정보를 데이터 플랫폼에 전송(외부)
 
     else
-        OrderService ->> OrderFacade: 주문 정보 오류(주문이 취소 되었거나, 주문 정보가 없다)
-        OrderFacade ->> API: 주문 정보 오류(주문이 취소 되었거나, 주문 정보가 없다)
+        OrderService ->> PaymentFacade: 주문 정보 오류(주문이 취소 되었거나, 주문 정보가 없다)
+        PaymentFacade ->> API: 주문 정보 오류(주문이 취소 되었거나, 주문 정보가 없다)
         API ->> Client: 오류 메시지 반환(주문이 취소 되었거나, 주문 정보가 없습니다.)
     end
 ```
