@@ -1,4 +1,8 @@
-package com.hhplus.e_commerce.business.dto
+package com.hhplus.e_commerce.business.facade.dto
+
+import com.hhplus.e_commerce.business.dto.ProductMetaDto
+import com.hhplus.e_commerce.business.dto.ProductSubDto
+import com.hhplus.e_commerce.business.dto.StockQuantity
 
 data class ProductInfo(
     val productId: Long,

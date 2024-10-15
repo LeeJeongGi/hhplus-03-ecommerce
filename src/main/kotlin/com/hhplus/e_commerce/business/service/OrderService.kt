@@ -2,7 +2,7 @@ package com.hhplus.e_commerce.business.service
 
 import com.hhplus.e_commerce.business.dto.OrderDto
 import com.hhplus.e_commerce.business.dto.OrderSaveDto
-import com.hhplus.e_commerce.business.dto.OrderSaveResultDto
+import com.hhplus.e_commerce.business.facade.dto.OrderSaveResultDto
 import com.hhplus.e_commerce.business.entity.Order
 import com.hhplus.e_commerce.business.entity.OrderItem
 import com.hhplus.e_commerce.business.repository.OrderItemRepository

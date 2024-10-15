@@ -1,4 +1,4 @@
-package com.hhplus.e_commerce.business.dto
+package com.hhplus.e_commerce.business.facade.dto
 
 import com.hhplus.e_commerce.business.entity.Order
 

@@ -1,6 +1,6 @@
 package com.hhplus.e_commerce.business.facade
 
-import com.hhplus.e_commerce.business.dto.ProductInfo
+import com.hhplus.e_commerce.business.facade.dto.ProductInfo
 import com.hhplus.e_commerce.business.service.ProductService
 import org.springframework.stereotype.Service
 

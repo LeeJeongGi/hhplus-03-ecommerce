@@ -1,6 +1,5 @@
 package com.hhplus.e_commerce.business.entity
 
-import com.hhplus.e_commerce.business.entity.type.ProductCategory
 import jakarta.persistence.*
 
 @Entity
