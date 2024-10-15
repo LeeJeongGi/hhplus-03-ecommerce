@@ -1,5 +1,6 @@
 package com.hhplus.e_commerce.business.entity
 
+import com.hhplus.e_commerce.business.dto.PaymentSaveDto
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -27,4 +28,16 @@ class Payment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
+
+    companion object {
+        fun from(paymentSaveDto: PaymentSaveDto): Payment {
+            return Payment(
+                userId = paymentSaveDto.userId,
+                orderId = paymentSaveDto.orderId,
+                amount = paymentSaveDto.amount,
+                status = paymentSaveDto.status,
+                paymentDate = LocalDateTime.now(),
+            )
+        }
+    }
 }
