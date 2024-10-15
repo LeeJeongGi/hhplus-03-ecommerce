@@ -3,6 +3,9 @@ package com.hhplus.e_commerce.business.service
 import com.hhplus.e_commerce.business.dto.BalanceChargeDto
 import com.hhplus.e_commerce.business.dto.UserBalanceDto
 import com.hhplus.e_commerce.business.entity.Balance
+import com.hhplus.e_commerce.business.entity.BalanceHistory
+import com.hhplus.e_commerce.business.entity.User
+import com.hhplus.e_commerce.business.repository.BalanceHistoryRepository
 import com.hhplus.e_commerce.business.repository.BalanceRepository
 import com.hhplus.e_commerce.business.repository.UserRepository
 import com.hhplus.e_commerce.common.error.code.ErrorCode
@@ -11,14 +14,10 @@ import org.springframework.stereotype.Service
 
 @Service
 class BalanceService(
-    private val userRepository: UserRepository,
     private val balanceRepository: BalanceRepository,
 ) {
 
-    fun updateCharge(balanceChargeDto: BalanceChargeDto): UserBalanceDto {
-
-        val user = userRepository.findById(balanceChargeDto.userId)
-            ?: throw BusinessException.NotFound(ErrorCode.User.NOT_FOUND_USER)
+    fun updateCharge(balanceChargeDto: BalanceChargeDto, user: User): UserBalanceDto {
 
         val balance = balanceRepository.findByUserIdWithLock(balanceChargeDto.userId)?.apply {
             updateAmount(balanceChargeDto.amount)

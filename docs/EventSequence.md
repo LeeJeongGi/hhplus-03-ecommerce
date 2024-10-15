@@ -41,22 +41,18 @@ sequenceDiagram
 sequenceDiagram
     participant Client
     participant API
-    participant BalanceFacade
-    participant UserService
+    participant BalanceService
     participant DB
 
     Client ->> API:잔액 조회 요청
     alt 존재하는 유저
-        API ->> BalanceFacade: 유저 인증(등록된 유저 인지 검증)
-        BalanceFacade ->> UserService: 유저 인증(등록된 유저 인지 검증)
-        UserService ->> DB: 유저의 존재와 현재 잔액 조회 요청
-        DB ->> UserService: 현재 유저의 잔액 정보
-        UserService ->> BalanceFacade: 유저 보유 잔액 정보 넘겨준다.
-        BalanceFacade ->> API: 유저의 잔액 정보
+        API ->> BalanceService: 유저 인증(등록된 유저 인지 검증)
+        BalanceService ->> DB: 유저의 존재와 현재 잔액 조회 요청
+        DB ->> BalanceService: 현재 유저의 잔액 정보
+        BalanceService ->> API: 유저의 잔액 정보
         API ->> Client: 성공 메세지, 유저의 잔액 정보 전달
     else
-        UserService ->> BalanceFacade: 잔액 조회 실패(존재하지 않는 유저)
-        BalanceFacade ->> API: 잔액 조회 실패(존재하지 않는 유저)
+        BalanceService ->> API: 잔액 조회 실패(존재하지 않는 유저)
         API ->> Client: 오류 메시지 반환(존재하지 않는 유저 입니다.)
     end
 ```

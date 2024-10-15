@@ -2,7 +2,6 @@ package com.hhplus.e_commerce.business.service
 
 import com.hhplus.e_commerce.business.dto.BalanceChargeDto
 import com.hhplus.e_commerce.business.repository.BalanceRepository
-import com.hhplus.e_commerce.business.repository.UserRepository
 import com.hhplus.e_commerce.business.stub.BalanceStub
 import com.hhplus.e_commerce.business.stub.UserStub
 import com.hhplus.e_commerce.common.error.code.ErrorCode
@@ -19,9 +18,6 @@ import kotlin.test.Test
 
 @ExtendWith(MockKExtension::class)
 class BalanceServiceTest {
-
-    @MockK
-    lateinit var userRepository: UserRepository
 
     @MockK
     lateinit var balanceRepository: BalanceRepository
@@ -45,11 +41,10 @@ class BalanceServiceTest {
             amount = rechargeAmount,
         )
 
-        every { userRepository.findById(userId) } returns saveUser
         every { balanceRepository.findByUserIdWithLock(userId) } returns balance
 
         // when
-        val updateBalance = balanceService.updateCharge(balanceChargeDto)
+        val updateBalance = balanceService.updateCharge(balanceChargeDto, saveUser)
 
         // then
         assertThat(updateBalance.userId).isEqualTo(balanceChargeDto.userId)
@@ -69,14 +64,13 @@ class BalanceServiceTest {
             userId = userId,
             amount = rechargeAmount,
         )
-        every { userRepository.findById(userId) } returns saveUser
         every { balanceRepository.findByUserIdWithLock(userId) } returns null
 
         val newBalance = BalanceStub.create(saveUser, rechargeAmount)
         every { balanceRepository.save(any()) } returns newBalance
 
         // when
-        val updateBalance = balanceService.updateCharge(balanceChargeDto)
+        val updateBalance = balanceService.updateCharge(balanceChargeDto, saveUser)
 
         // then
         assertThat(updateBalance.userId).isEqualTo(balanceChargeDto.userId)
