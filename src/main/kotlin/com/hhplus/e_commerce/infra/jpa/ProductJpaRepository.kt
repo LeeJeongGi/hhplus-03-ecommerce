@@ -13,5 +13,6 @@ interface ProductJpaRepository: JpaRepository<Product, Long> {
     @Query("SELECT ps FROM ProductStock ps WHERE ps.productId = :productId")
     fun findStocksByProductId(@Param("productId") productId: Long): List<ProductStock>
 
+    @Query("SELECT p FROM Product p")
     fun findAllProduct(pageable: Pageable): Page<Product>
 }
