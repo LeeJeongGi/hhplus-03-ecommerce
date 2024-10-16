@@ -26,15 +26,23 @@
 
 ```code
 src/main/kotlin/com/hhplus/e_commerce
-├── ECommerceApplication.kt
 ├── business
-│   └── entity
+│   ├── dto
+│   ├── entity
+│   │   └── type
+│   ├── facade
+│   │   └── dto
+│   ├── repository
+│   └── service
 ├── common
-│   └── config
+│   ├── config
 │   └── error
 │       ├── code
 │       ├── exception
 │       └── response
+├── infra
+│   ├── impl
+│   └── jpa
 └── interfaces
     └── presentation
         ├── controller

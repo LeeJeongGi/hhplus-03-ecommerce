@@ -9,14 +9,11 @@ class OrderItem(
     @Column(name = "order_id", nullable = false)
     val orderId: Long,
 
-    @Column(name = "product_id", nullable = false)
-    val productId: Long,
+    @Column(name = "product_stock_id", nullable = false)
+    val productStockId: Long,
 
     @Column(name = "quantity", nullable = false)
     val quantity: Int,
-
-    @Column(name = "amount", nullable = false)
-    val amount: Long
 
 ): BaseEntity() {
 

@@ -1,6 +1,5 @@
 package com.hhplus.e_commerce.business.entity
 
-import com.hhplus.e_commerce.business.entity.type.ProductCategory
 import jakarta.persistence.*
 
 @Entity
@@ -9,8 +8,8 @@ class Product(
     @Column(name = "name", nullable = false)
     val name: String,
 
-    @Enumerated(EnumType.STRING) @Column(name = "category", nullable = false)
-    val category: ProductCategory,
+    @Column(name = "category")
+    val category: String,
 
     @Column(name = "price", nullable = false)
     val price: Int,

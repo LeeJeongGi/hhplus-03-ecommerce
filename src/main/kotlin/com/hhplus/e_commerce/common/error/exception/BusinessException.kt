@@ -4,7 +4,7 @@ import com.hhplus.e_commerce.common.error.code.ErrorCode
 
 open class BusinessException(
     val errorCode: ErrorCode
-): RuntimeException() {
+): RuntimeException(errorCode.message) {
 
     class NotFound(
         errorCode: ErrorCode,
