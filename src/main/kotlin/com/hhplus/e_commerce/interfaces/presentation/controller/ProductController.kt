@@ -6,6 +6,8 @@ import com.hhplus.e_commerce.interfaces.presentation.response.ProductResponse
 import com.hhplus.e_commerce.interfaces.presentation.response.ProductSummary
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -43,6 +45,18 @@ class ProductController(
     ): ResponseEntity<List<ProductSummary>> {
         val products = productService.getTop5Products(limit, days)
         val result = products.map { ProductSummary.from(it) }
+        return ResponseEntity.ok(result)
+    }
+
+    /**
+     * 전체 상품 목록 조회
+     */
+    @Operation(summary = "전체 상품 조회", description = "페이지별로 전체 상품 목록을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공")
+    @GetMapping
+    fun getAllProducts(pageable: Pageable): ResponseEntity<Page<ProductResponse>> {
+        val productPage = productFacade.getAllProducts(pageable)
+        val result = productPage.map { productInfo ->  ProductResponse.from(productInfo)}
         return ResponseEntity.ok(result)
     }
 }

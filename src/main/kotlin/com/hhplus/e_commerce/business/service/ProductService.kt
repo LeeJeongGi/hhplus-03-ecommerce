@@ -7,7 +7,9 @@ import com.hhplus.e_commerce.business.repository.ProductOrderStatsRepository
 import com.hhplus.e_commerce.business.repository.ProductRepository
 import com.hhplus.e_commerce.common.error.code.ErrorCode
 import com.hhplus.e_commerce.common.error.exception.BusinessException
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -49,6 +51,14 @@ class ProductService(
                 salesCount = productOrderStats.totalSalesAmount.toInt(),
             )
         }
-
     }
+
+    fun getAllProducts(pageable: Pageable): Page<ProductMetaDto> {
+        val productsPage = productRepository.findAllProduct(pageable)
+
+        return productsPage.map { product ->
+            ProductMetaDto.from(product)
+        }
+    }
+
 }
