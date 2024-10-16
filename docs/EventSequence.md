@@ -225,65 +225,64 @@ sequenceDiagram
 sequenceDiagram
     participant Client
     participant API
-    participant BasketFacade
-    participant UserService
-    participant BasketService
+    participant CartsService
     participant DB
 
     Client ->> API:유저의 장바구니 목록 조회 요청
-    alt 존재하는 유저
-        API ->> BasketFacade: 유저의 장바구니 목록 조회 요청
-        BasketFacade ->> UserService: 유저 인증(등록된 유저 인지 검증)
-        UserService ->> DB: 유저 인증(등록된 유저 인지 검증)
-        DB ->> UserService: 유저 인증 완료
-        UserService ->> BasketFacade: 유저 인증 완료
-        BasketFacade ->> BasketService: 유저 장바구니 상품 목록 조회 요청
-        BasketService ->> DB: 유저 장바구니 상품 목록 조회
-        DB ->> BasketService: 유저 장바구니 상품 정보
-        BasketService ->> BasketFacade: 유저 장바구니 상품 정보 리스트 형식으로 전달
-        BasketFacade ->> API: 유저 장바구니 상품 정보 리스트 형식으로 전달
-        API ->> Client: 성공 메세지, 유저 장바구니 상품 정보 리스트 정보 전달
-    else
-        UserService ->> BasketFacade: 유저의 장바구니 목록 조회 실패(존재하지 않는 유저)
-        BasketFacade ->> API: 유저의 장바구니 목록 조회 실패(존재하지 않는 유저)
-        API ->> Client: 오류 메시지 반환(존재하지 않는 유저 입니다.)
-    end
+    API ->> CartsService: 유저의 장바구니 목록 조회 요청
+    CartsService ->> DB: 저의 장바구니 목록 조회 요청
+    DB ->> CartsService: 유저 장바구니 상품 정보
+    CartsService ->> API: 유저 장바구니 상품 정보 리스트 형식으로 전달
+    API ->> Client: 성공 메세지, 유저 장바구니 상품 정보 리스트 정보 전달
+ 
 ```
 <br>
 
 ---
 
-# 장바구니 상품 추가/삭제 API
+# 장바구니 상품 추가 API
 
 ### 이벤트 시퀀스
 ```mermaid
 sequenceDiagram
     participant Client
     participant API
-    participant BasketFacade
-    participant UserService
-    participant BasketService
+    participant CartsService
     participant DB
 
-    Client ->> API:유저의 장바구니 추가/삭제 요청
-    alt 존재하는 유저
-        API ->> BasketFacade: 유저 인증(등록된 유저 인지 검증)
-        BasketFacade ->> UserService: 유저 인증(등록된 유저 인지 검증)
-        UserService ->> DB: 유저 인증(등록된 유저 인지 검증)
-        DB ->> UserService: 유저 인증 완료
-        UserService ->> BasketFacade: 유저 인증 완료
-        BasketFacade ->> BasketService: 유저 장바구니 상품 추가/삭제 요청
-        BasketService ->> DB: 현재 유저 장바구니 목록 조회
-        DB ->> BasketService: 현재 유저 장바구니 정보
-        BasketService ->> DB: 유저 장바구니 목록 업데이트 요청
-        DB ->> BasketService: 업데이트 한 유저의 장바구니 정보
-        BasketService ->> BasketFacade: 업데이트 된 유저 장바구니 정보 리스트 형식으로 전달
-        BasketFacade ->> API: 업데이트 된 유저 장바구니 정보 리스트 형식으로 전달
-        API ->> Client: 성공 메세지, 유저 장바구니 정보 리스트 정보 전달
-    else
-        UserService ->> BasketFacade: 유저의 장바구니 추가/삭제 실패(존재하지 않는 유저)
-        BasketFacade ->> API: 유저의 장바구니 추가/삭제 실패(존재하지 않는 유저)
-        API ->> Client: 오류 메시지 반환(존재하지 않는 유저 입니다.)
-    end
+    Client ->> API: 유저의 장바구니 추가 요청
+    API ->> CartsService: 유저의 장바구니 추가 요청
+    CartsService ->> DB: 장바구니에 상품이 저장되어 있는지 확인
+    DB ->> CartsService: 장바구니에 저장된 상품 인증
+    CartsService ->> DB: 저장된 장바구니 상품 저장
+    DB ->> CartsService: 저장된 장바구니 상품 정보 전달
+    CartsService ->> API: 저장된 장바구니 상품 정보 전달
+    API ->> Client: 저장된 장바구니 상품 정보 출력
+    
+```
+<br><br>
+
+---
+
+# 장바구니 상품 삭제 API
+
+
+### 이벤트 시퀀스
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API
+    participant CartsService
+    participant DB
+
+    Client ->> API: 유저의 장바구니 삭제 요청
+    API ->> CartsService: 유저의 장바구니 삭제 요청
+    CartsService ->> DB: 장바구니에 상품이 저장되어 있는지 확인
+    DB ->> CartsService: 장바구니에 저장된 상품 인증
+    CartsService ->> DB: 저장된 장바구니 상품 삭제 요청
+    DB ->> CartsService: 저장된 장바구니 상품 삭제
+    CartsService ->> API: 삭제된 상품 전달
+    API ->> Client: 삭제된 상품 출력
+    
 ```
 <br><br>

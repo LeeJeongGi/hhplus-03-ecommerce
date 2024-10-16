@@ -35,7 +35,7 @@ class CartsController(
     @ApiResponse(responseCode = "200", description = "장바구니 업데이트 성공")
     @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음")
     @PostMapping("/{productId}")
-    fun updateBasket(
+    fun saveCarts(
         @PathVariable userId: Long,
         @RequestBody request: CartsRequest
     ): ResponseEntity<CartsResponse> {
