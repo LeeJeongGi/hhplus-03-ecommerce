@@ -27,7 +27,7 @@ class OrderController(
     @ApiResponse(responseCode = "404", description = "주문 정보를 찾을 수 없음")
     @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @PostMapping
-    fun order(@RequestBody request: OrderRequest): ResponseEntity<Any> {
+    fun order(@RequestBody request: OrderRequest): ResponseEntity<OrderResponse> {
         val orderSaveDto = OrderSaveDto(
             userId = request.userId,
             totalAmount = request.totalAmount,
