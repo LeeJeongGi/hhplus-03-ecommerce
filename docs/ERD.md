@@ -93,7 +93,6 @@ erDiagram
         BIGINT id PK "장바구니 항목 고유 ID"
         BIGINT user_id FK "유저 ID"
         BIGINT product_id FK "상품 ID"
-        TINYINT status "상태 (1: 활성, 2: 비활성)"
         TIMESTAMP created_at "등록일"
         TIMESTAMP updated_at "업데이트일"
     }
