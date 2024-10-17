@@ -8,4 +8,6 @@ interface PaymentRepository {
 
     fun deleteAll()
 
+    fun findByOrderId(orderId: Long): Payment?
+
 }
