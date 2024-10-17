@@ -101,6 +101,7 @@ class BalanceFacadeTest {
     @Test
     @DisplayName("잔액 충전 동시성 테스트 - 동시에 500, 600원에 대한 충전이 들어올 경우 순차적으로 처리되어 1100원이 증가해야 한다.")
     fun chargeIntegrationTest() {
+
         // given
         val user = UserStub.create("Lee")
         val saveUser = userRepository.save(user)
