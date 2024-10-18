@@ -9,4 +9,6 @@ interface OrderItemRepository {
     fun deleteAll()
 
     fun saveAll(orderItems: List<OrderItem>)
+
+    fun findByProductStockId(productStockId: Long): List<OrderItem>
 }

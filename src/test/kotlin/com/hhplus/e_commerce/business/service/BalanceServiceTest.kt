@@ -126,7 +126,7 @@ class BalanceServiceTest {
         val user = UserStub.create("User")
         val balance = BalanceStub.create(user, 1000)
 
-        every { balanceRepository.findByUserId(userId) } returns balance
+        every { balanceRepository.findByUserIdWithLock(userId) } returns balance
         every { balanceRepository.save(balance) } returns balance  // save 메서드 모킹 추가
 
         // when
