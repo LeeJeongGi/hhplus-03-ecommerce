@@ -26,6 +26,32 @@ class BalanceServiceTest {
     private lateinit var balanceService: BalanceService
 
     @Test
+    @DisplayName("잔액 차감 테스트 : 잔액이 1000원 있을 때 500원 상품을 구입하면 잔액이 500원 남아 있다.")
+    fun updateChargeOrderUser() {
+        // given
+        val userId = 0L
+        val initialAmount = 1000
+        val rechargeAmount = -500
+
+        val saveUser = UserStub.create("Lee")
+        val balance = BalanceStub.create(saveUser, amount = initialAmount)
+
+        val balanceChargeDto = BalanceChargeDto(
+            userId = userId,
+            amount = rechargeAmount,
+        )
+
+        every { balanceRepository.findByUserIdWithLock(userId) } returns balance
+
+        // when
+        val updateBalance = balanceService.updateCharge(balanceChargeDto, saveUser)
+
+        // then
+        assertThat(updateBalance.userId).isEqualTo(balanceChargeDto.userId)
+        assertThat(updateBalance.currentAmount).isEqualTo(initialAmount + rechargeAmount)
+    }
+
+    @Test
     @DisplayName("잔액 충전 테스트 : 잔액이 있는 유저라면 기존 잔액 + 충전 잔액으로 업데이트 한다.")
     fun updateChargeOldUser() {
         // given
