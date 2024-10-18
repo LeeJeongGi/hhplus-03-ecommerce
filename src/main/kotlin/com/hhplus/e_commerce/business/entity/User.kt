@@ -5,17 +5,14 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "app_user")
 class User(
-    @Column(name = "name")
-    val name: String,
-
-    balance: Int,
+    name: String,
 ) : BaseEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
-    @Column(name = "balance")
-    var balance: Int = balance
-        private set
+    @Column(name = "name", nullable = false)
+    var name: String = name
+        protected set
 }

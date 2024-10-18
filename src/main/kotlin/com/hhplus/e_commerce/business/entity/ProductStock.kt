@@ -8,7 +8,11 @@ class ProductStock(
     @Column(name = "product_id", nullable = false)
     val productId: Long,
 
+    @Column(name = "size", nullable = false)
+    val size: String,
+
     quantity: Int,
+
 ): BaseEntity() {
 
     @Id
@@ -19,4 +23,7 @@ class ProductStock(
     var quantity: Int = quantity
         private set
 
+    fun updateQuantity(newQuantity: Int) {
+        this.quantity = newQuantity
+    }
 }
