@@ -4,6 +4,7 @@ import com.hhplus.e_commerce.business.entity.Payment
 import java.time.LocalDateTime
 
 data class PaymentSaveResultDto(
+    val paymentId: Long,
     val userId: Long,
     val orderId: Long,
     val status: String,
@@ -13,6 +14,7 @@ data class PaymentSaveResultDto(
     companion object {
         fun from(payment: Payment): PaymentSaveResultDto {
             return PaymentSaveResultDto(
+                paymentId = payment.id,
                 userId = payment.userId,
                 orderId = payment.orderId,
                 status = payment.status,

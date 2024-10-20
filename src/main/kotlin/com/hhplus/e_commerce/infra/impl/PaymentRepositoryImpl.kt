@@ -17,4 +17,8 @@ class PaymentRepositoryImpl(
         paymentJpaRepository.deleteAll()
     }
 
+    override fun findByOrderId(orderId: Long): Payment? {
+        return paymentJpaRepository.findByOrderId(orderId)
+    }
+
 }

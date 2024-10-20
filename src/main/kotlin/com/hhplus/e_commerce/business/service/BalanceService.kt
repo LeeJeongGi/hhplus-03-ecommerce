@@ -39,7 +39,7 @@ class BalanceService(
     }
 
     fun changeBalance(userId: Long, totalAmount: Int): UserBalanceDto {
-        val userBalance =  balanceRepository.findByUserId(userId)
+        val userBalance =  balanceRepository.findByUserIdWithLock(userId)
             ?: throw BusinessException.NotFound(ErrorCode.User.NOT_FOUND_USER)
 
         userBalance.updateAmount(-totalAmount)

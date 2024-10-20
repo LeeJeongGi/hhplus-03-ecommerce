@@ -28,9 +28,6 @@ class OrderFacade(
             BusinessException.BadRequest(ErrorCode.User.INSUFFICIENT_BALANCE)
         }
 
-        // 유저 잔액 업데이트
-        val userBalanceDto = balanceService.changeBalance(userBalance.userId, orderSaveDto.totalAmount)
-
         // 주문 정보 저장
         val result = orderService.save(orderSaveDto)
 
