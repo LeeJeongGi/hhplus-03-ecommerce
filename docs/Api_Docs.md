@@ -74,7 +74,16 @@
   "name": "상품명",
   "category": "카테고리",
   "price": 20000,
-  "stockQuantity": 10
+  "stockQuantities": [
+    {
+      "size": "L",
+      "quantity": 2
+    },
+    {
+      "size": "M",
+      "quantity": 3
+    }
+  ]
 }
 ```
 
@@ -143,13 +152,13 @@
 ```json
 {
   "userId": 1,
-  "products": [
+  "productStocks": [
     {
-      "productId": 123,
+      "productStockId": 123,
       "quantity": 2
     },
     {
-      "productId": 456,
+      "productStockId": 456,
       "quantity": 1
     }
   ]
@@ -159,22 +168,9 @@
 ### Response Body
 ```json
 {
-  "balance": 20000,
+  "userId": 1,
   "orderId": 789,
-  "products": [
-    {
-      "productId": 123,
-      "quantity": 2,
-      "price": 30000,
-      "totalAmount": 60000
-    },
-    {
-      "productId": 456,
-      "quantity": 1,
-      "price": 15000,
-      "totalAmount": 15000
-    }
-  ]
+  "totalAmount": 60000
 }
 ```
 ### Error
@@ -213,68 +209,55 @@
 ### Request
 
 - **Method** : GET
-- **Endpoint** : `/v1/users/{userId}/basket`
+- **Endpoint** : `/v1/users/{userId}/carts`
 - **Description** : 유저의 장바구니에 담겨 있는 상품을 조회 합니다.
-- **Path Parameter** : `userId` - 충전할 유저의 고유 ID
+- **Path Parameter** : `userId` - 유저의 고유 ID
 
 ### Response Body
 ```json
 {
-  "basketItems": [
-    {
-      "productId": 123,
-      "quantity": 2
-    },
-    {
-      "productId": 456,
-      "quantity": 1
-    }
-  ]
+  {
+    "userId": 1,
+    "productId": 101
+  },
+  {
+    "userId": 1,
+    "productId": 102
+  },
+  {
+    "userId": 1,
+    "productId": 103
+  }
 }
+
 ```
 
-### Error
-```json
-{
-  "code": 404,
-  "message": "user not found"
-}
-```
+---
 
 
-## 7. 장바구니 상품 추가/삭제 API
+## 7. 장바구니 상품 추가 API
 
 ### Request
 
 - **Method** : POST
-- **Endpoint** : `/v1/users/{userId}/basket`
-- **Description** : 유저의 장바구니에 상품을 추가/삭제를 한 후 업데이트 된 유저의
+- **Endpoint** : `/v1/users/{userId}/carts/{productId}`
+- **Description** : 유저의 장바구니에 상품을 추가 한 후 업데이트 된 유저의
 장바구니 목록 정보를 돌려준다.
-- **Path Parameter** : `userId` - 충전할 유저의 고유 ID
+- **Path Parameter** : `userId` - 유저의 고유 ID
 
 ### Request Body
 ```json
 {
   "userId": 1,
   "productId": 123,
-  "quantity": 2,
-  "action": "ADD 또는 REMOVE "
 }
 ```
 
 ### Response Body
 ```json
 {
-  "basketItems": [
-    {
-      "productId": 123,
-      "quantity": 2
-    },
-    {
-      "productId": 456,
-      "quantity": 1
-    }
-  ]
+  "userId": 1,
+  "productId": 103
 }
 ```
 
@@ -282,6 +265,40 @@
 ```json
 {
   "code": 404,
-  "message": "user not found"
+  "message": "productId not found"
+}
+```
+
+## 7. 장바구니 상품 삭제 API
+
+### Request
+
+- **Method** : DELETE
+- **Endpoint** : `/v1/users/{userId}/carts/{productId}`
+- **Description** : 유저의 장바구니에 상품을 추가 한 후 업데이트 된 유저의
+  장바구니 목록 정보를 돌려준다.
+- **Path Parameter** : `userId` - 유저의 고유 ID
+
+### Request Body
+```json
+{
+  "userId": 1,
+  "productId": 123,
+}
+```
+
+### Response Body
+```json
+{
+  "userId": 1,
+  "productId": 103
+}
+```
+
+### Error
+```json
+{
+  "code": 404,
+  "message": "productId not found"
 }
 ```

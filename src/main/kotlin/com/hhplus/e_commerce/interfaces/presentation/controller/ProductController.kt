@@ -1,19 +1,22 @@
 package com.hhplus.e_commerce.interfaces.presentation.controller
 
-import com.hhplus.e_commerce.common.error.response.ErrorResponse
-import com.hhplus.e_commerce.common.error.exception.BusinessException
+import com.hhplus.e_commerce.business.facade.ProductFacade
+import com.hhplus.e_commerce.business.service.ProductService
 import com.hhplus.e_commerce.interfaces.presentation.response.ProductResponse
 import com.hhplus.e_commerce.interfaces.presentation.response.ProductSummary
-import com.hhplus.e_commerce.interfaces.presentation.response.TopProductsResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import org.springframework.http.HttpStatus
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/v1/products")
-class ProductController {
+class ProductController(
+    private val productFacade: ProductFacade,
+    private val productService: ProductService,
+) {
 
     /**
      * 3. 상품 조회 API
@@ -24,19 +27,9 @@ class ProductController {
     @GetMapping("/{productId}")
     fun getProduct(
         @PathVariable productId: Long
-    ): ResponseEntity<Any> {
-        return try {
-            val productResponse = ProductResponse(
-                productId = productId,
-                name = "상품명",
-                category = "카테고리",
-                price = 20000,
-                stockQuantity = 10
-            )
-            ResponseEntity.ok(productResponse)
-        } catch (e: BusinessException.NotFound) {
-            ResponseEntity(ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message), HttpStatus.NOT_FOUND)
-        }
+    ): ResponseEntity<ProductResponse> {
+        val productInfo = productFacade.getProduct(productId)
+        return ResponseEntity.ok(ProductResponse.from(productInfo))
     }
 
     /**
@@ -49,28 +42,21 @@ class ProductController {
     fun getTopProducts(
         @RequestParam("limit") limit: Int,
         @RequestParam(value = "days", defaultValue = "3") days: Int
-    ): ResponseEntity<Any> {
-        return try {
-            val topProducts = listOf(
-                ProductSummary(
-                    productId = 123,
-                    name = "상품명1",
-                    category = "카테고리",
-                    price = 15000,
-                    salesCount = 100
-                ),
-                ProductSummary(
-                    productId = 456,
-                    name = "상품명2",
-                    category = "카테고리",
-                    price = 12000,
-                    salesCount = 85
-                )
-            ).take(limit) // limit 수만큼 상품 정보 반복
+    ): ResponseEntity<List<ProductSummary>> {
+        val products = productService.getTop5Products(limit, days)
+        val result = products.map { ProductSummary.from(it) }
+        return ResponseEntity.ok(result)
+    }
 
-            ResponseEntity.ok(TopProductsResponse(topProducts))
-        } catch (e: BusinessException.NotFound) {
-            ResponseEntity(ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message), HttpStatus.NOT_FOUND)
-        }
+    /**
+     * 전체 상품 목록 조회
+     */
+    @Operation(summary = "전체 상품 조회", description = "페이지별로 전체 상품 목록을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공")
+    @GetMapping
+    fun getAllProducts(pageable: Pageable): ResponseEntity<Page<ProductResponse>> {
+        val productPage = productFacade.getAllProducts(pageable)
+        val result = productPage.map { productInfo ->  ProductResponse.from(productInfo)}
+        return ResponseEntity.ok(result)
     }
 }

@@ -9,15 +9,24 @@ class Order(
     @Column(name = "user_id", nullable = false)
     val userId: Long,
 
-    @Column(name = "payment_date", nullable = false)
-    val paymentDate: LocalDateTime,
+    status: String,
 
     @Column(name = "total_amount", nullable = false)
-    val totalAmount: Long,
+    val totalAmount: Int,
+
+    @Column(name = "order_date", nullable = false)
+    val orderDate: LocalDateTime,
 ): BaseEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0
+    var id: Long = 0
 
+    @Column(name = "status", nullable = false)
+    var status: String = status
+        protected set
+
+    fun updateStatus(status: String) {
+        this.status = status
+    }
 }

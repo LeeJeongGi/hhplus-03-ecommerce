@@ -1,18 +1,21 @@
 package com.hhplus.e_commerce.interfaces.presentation.controller
 
-import com.hhplus.e_commerce.common.error.response.ErrorResponse
-import com.hhplus.e_commerce.common.error.exception.BusinessException
+import com.hhplus.e_commerce.business.dto.BalanceChargeDto
+import com.hhplus.e_commerce.business.facade.BalanceFacade
+import com.hhplus.e_commerce.business.service.BalanceService
 import com.hhplus.e_commerce.interfaces.presentation.request.ChargeRequest
 import com.hhplus.e_commerce.interfaces.presentation.response.ChargeResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/v1/users")
-class BalanceController {
+class BalanceController(
+    private val balanceFacade: BalanceFacade,
+    private val balanceService: BalanceService,
+) {
 
     /**
      * 1. 잔액 충전 API
@@ -24,17 +27,9 @@ class BalanceController {
     fun chargeBalance(
         @PathVariable userId: Long,
         @RequestBody request: ChargeRequest
-    ): ResponseEntity<Any> {
-        return try {
-            return ResponseEntity.ok(
-                ChargeResponse(
-                    userId = 1L,
-                    balance = 1000,
-                )
-            )
-        } catch (e: BusinessException.NotFound) {
-            ResponseEntity(ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message), HttpStatus.NOT_FOUND)
-        }
+    ): ResponseEntity<ChargeResponse> {
+        val userBalance = balanceFacade.charge(BalanceChargeDto.of(userId, request.amount))
+        return ResponseEntity.ok(ChargeResponse.from(userBalance))
     }
 
     /**
@@ -46,16 +41,8 @@ class BalanceController {
     @GetMapping("/{userId}/balance")
     fun getBalance(
         @PathVariable userId: Long
-    ): ResponseEntity<Any> {
-        return try {
-            // 잔액 조회 로직 구현
-            val response = ChargeResponse(
-                userId = 1L,
-                balance = 2000 // 예시로 설정
-            )
-            ResponseEntity.ok(response)
-        } catch (e: BusinessException.NotFound) {
-            ResponseEntity(ErrorResponse(code = e.errorCode.errorCode, message = e.errorCode.message), HttpStatus.NOT_FOUND)
-        }
+    ): ResponseEntity<ChargeResponse> {
+        val userBalance = balanceService.getUserBalance(userId)
+        return ResponseEntity.ok(ChargeResponse.from(userBalance))
     }
 }

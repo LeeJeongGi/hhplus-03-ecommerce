@@ -24,6 +24,7 @@ sealed interface ErrorCode {
         override val message: String,
     ) : ErrorCode {
         NOT_FOUND_USER(HttpStatus.NOT_FOUND, "USER001", "유저를 찾을 수 없습니다."),
+        INSUFFICIENT_BALANCE(HttpStatus.BAD_REQUEST, "USER002", "잔액이 부족합니다."),
     }
 
     enum class Balance(
@@ -40,6 +41,7 @@ sealed interface ErrorCode {
         override val message: String,
     ) : ErrorCode {
         NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "PRODUCT001", "상품을 찾을 수 없습니다."),
+        OUT_OF_STOCK(HttpStatus.BAD_REQUEST, "PRODUCT002", "재고가 부족합니다."),
     }
 
     enum class Order(
@@ -48,5 +50,14 @@ sealed interface ErrorCode {
         override val message: String,
     ) : ErrorCode {
         NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "ORDER001", "주문 이력을 찾을 수 없습니다."),
+        INVALID_ORDER_STATUS(HttpStatus.BAD_REQUEST, "ORDER002", "주문 완료된 주문 번호가 아닙니다."),
+    }
+
+    enum class Carts(
+        override val httpStatus: HttpStatus,
+        override val errorCode: String,
+        override val message: String,
+    ) : ErrorCode {
+        NOT_FOUND_CART(HttpStatus.NOT_FOUND, "CARTS001", "장바구니 상품 정보를 찾을 수 없습니다."),
     }
 }
