@@ -60,4 +60,5 @@ sealed interface ErrorCode {
     ) : ErrorCode {
         NOT_FOUND_CART(HttpStatus.NOT_FOUND, "CARTS001", "장바구니 상품 정보를 찾을 수 없습니다."),
     }
+
 }

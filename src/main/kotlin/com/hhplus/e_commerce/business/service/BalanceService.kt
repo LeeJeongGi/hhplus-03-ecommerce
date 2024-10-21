@@ -3,11 +3,8 @@ package com.hhplus.e_commerce.business.service
 import com.hhplus.e_commerce.business.dto.BalanceChargeDto
 import com.hhplus.e_commerce.business.dto.UserBalanceDto
 import com.hhplus.e_commerce.business.entity.Balance
-import com.hhplus.e_commerce.business.entity.BalanceHistory
 import com.hhplus.e_commerce.business.entity.User
-import com.hhplus.e_commerce.business.repository.BalanceHistoryRepository
 import com.hhplus.e_commerce.business.repository.BalanceRepository
-import com.hhplus.e_commerce.business.repository.UserRepository
 import com.hhplus.e_commerce.common.error.code.ErrorCode
 import com.hhplus.e_commerce.common.error.exception.BusinessException
 import org.springframework.stereotype.Service
