@@ -1,6 +1,6 @@
 ## 주문 통합 테스트
 
-### 코드 링크 -> []
+### 코드 링크 -> [테스트 코드](https://github.com/LeeJeongGi/hhplus-03-ecommerce/blob/feature/step10/src/test/kotlin/com/hhplus/e_commerce/business/facade/OrderFacadeTest.kt)
 
 ---
 ### 통합 테스트 시나리오
