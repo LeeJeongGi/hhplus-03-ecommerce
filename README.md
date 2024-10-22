@@ -51,3 +51,8 @@ src/main/kotlin/com/hhplus/e_commerce
 ```
 
 ---
+
+### 통합 테스트
+1. [잔액 충전 통합 테스트](./docs/BalanceIntegration.md)
+2. [주문 통합 테스트](./docs/OrderIntegration.md)
+3. [결제 통합 테스트](./docs/PaymentIntegration.md)
