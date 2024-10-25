@@ -11,7 +11,7 @@ data class UserBalanceDto(
 ) {
     fun isEnoughMoney(orderAmount: Int) {
         if (this.currentAmount < orderAmount) {
-            BusinessException.BadRequest(ErrorCode.User.INSUFFICIENT_BALANCE)
+            throw BusinessException.BadRequest(ErrorCode.User.INSUFFICIENT_BALANCE)
         }
     }
 
