@@ -2,7 +2,7 @@ package com.hhplus.e_commerce.common.error.exception
 
 import com.hhplus.e_commerce.common.error.code.ErrorCode
 
-open class BusinessException(
+sealed class BusinessException(
     val errorCode: ErrorCode
 ): RuntimeException(errorCode.message) {
 
