@@ -24,9 +24,7 @@ class OrderFacade(
 
         // 유저 조회 - 유저 잔액 검증
         val userBalance = balanceService.getUserBalance(orderSaveDto.userId)
-        if (userBalance.currentAmount < orderSaveDto.totalAmount) {
-            BusinessException.BadRequest(ErrorCode.User.INSUFFICIENT_BALANCE)
-        }
+        userBalance.isEnoughMoney(orderSaveDto.totalAmount)
 
         // 주문 정보 저장
         val result = orderService.save(orderSaveDto)

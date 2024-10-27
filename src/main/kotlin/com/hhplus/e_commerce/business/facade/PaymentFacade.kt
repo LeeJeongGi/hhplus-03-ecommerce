@@ -32,9 +32,7 @@ class PaymentFacade(
 
         // 3. 유저 잔액 확인
         val userBalance = balanceService.getUserBalance(order.userId)
-        if (userBalance.currentAmount < order.totalAmount) {
-            throw BusinessException.BadRequest(ErrorCode.User.INSUFFICIENT_BALANCE)
-        }
+        userBalance.isEnoughMoney(order.totalAmount)
 
         // 4. 잔액 차감
         val paymentUserBalance = balanceService.changeBalance(order.userId, order.totalAmount)
