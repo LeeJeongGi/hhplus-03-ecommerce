@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query
 
 interface BalanceJpaRepository: JpaRepository<Balance, Long> {
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.OPTIMISTIC)
     @Query("select b from Balance b where b.user.id = :userId")
     fun findByUserIdWithLock(userId: Long): Balance?
 

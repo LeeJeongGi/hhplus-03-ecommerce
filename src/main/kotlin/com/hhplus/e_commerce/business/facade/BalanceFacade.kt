@@ -8,6 +8,8 @@ import com.hhplus.e_commerce.business.repository.BalanceHistoryRepository
 import com.hhplus.e_commerce.business.repository.UserRepository
 import com.hhplus.e_commerce.common.error.code.ErrorCode
 import com.hhplus.e_commerce.common.error.exception.BusinessException
+import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.orm.ObjectOptimisticLockingFailureException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -28,17 +30,24 @@ class BalanceFacade(
         val user = userRepository.findById(balanceChargeDto.userId)
             ?: throw BusinessException.NotFound(ErrorCode.User.NOT_FOUND_USER)
 
-        val userBalanceDto = balanceService.updateCharge(balanceChargeDto, user)
+        return kotlin.runCatching {
+            val userBalanceDto = balanceService.updateCharge(balanceChargeDto, user)
 
-        val balanceHistory = BalanceHistory(
-            balanceId = userBalanceDto.balanceId,
-            changeAmount = balanceChargeDto.amount,
-            changeType = "SAVE",
-            balanceAfter = userBalanceDto.currentAmount,
-            description = "잔액 충전"
-        )
-        balanceHistoryRepository.save(balanceHistory)
-
-        return userBalanceDto
+            val balanceHistory = BalanceHistory(
+                balanceId = userBalanceDto.balanceId,
+                changeAmount = balanceChargeDto.amount,
+                changeType = "SAVE",
+                balanceAfter = userBalanceDto.currentAmount,
+                description = "잔액 충전"
+            )
+            balanceHistoryRepository.save(balanceHistory)
+            userBalanceDto
+        }.getOrElse { exception ->
+            when (exception) {
+                is ObjectOptimisticLockingFailureException, is DataIntegrityViolationException ->
+                    throw BusinessException.BadRequest(ErrorCode.Balance.ALREADY_CHARGED)
+                else -> throw exception
+            }
+        }
     }
 }

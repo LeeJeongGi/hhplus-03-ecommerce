@@ -1,6 +1,7 @@
 package com.hhplus.e_commerce.business.facade
 
 import com.hhplus.e_commerce.business.dto.BalanceChargeDto
+import com.hhplus.e_commerce.business.dto.UserBalanceDto
 import com.hhplus.e_commerce.business.repository.BalanceRepository
 import com.hhplus.e_commerce.business.repository.UserRepository
 import com.hhplus.e_commerce.business.service.BalanceService
@@ -13,9 +14,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.util.concurrent.CompletableFuture
+import java.util.*
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import kotlin.test.Test
 
 @SpringBootTest
@@ -99,7 +100,7 @@ class BalanceFacadeTest {
     }
 
     @Test
-    @DisplayName("잔액 충전 동시성 테스트 - 동시에 500, 600원에 대한 충전이 들어올 경우 순차적으로 처리되어 1100원이 증가해야 한다.")
+    @DisplayName("잔액 충전 동시성 테스트 - 동시에 500원 충전이 10번 들어와도 충전은 한번만 완료 되어야 한다.")
     fun chargeIntegrationTest() {
 
         // given
@@ -109,35 +110,43 @@ class BalanceFacadeTest {
         val balance = BalanceStub.create(saveUser, 500)
         balanceRepository.save(balance)
 
-        val balanceChargeDto1 = BalanceChargeDto(
-            userId = saveUser.id,
-            amount = 500
-        )
-
-        val balanceChargeDto2 = BalanceChargeDto(
-            userId = saveUser.id,
-            amount = 600
-        )
-
-        val executor = Executors.newFixedThreadPool(2)
-        val thread1 = CompletableFuture.supplyAsync({
-            balanceFacade.charge(balanceChargeDto1)
-        }, executor)
-
-        val thread2 = CompletableFuture.supplyAsync({
-            balanceFacade.charge(balanceChargeDto2)
-        }, executor)
+        val executor = Executors.newFixedThreadPool(100)
+        val latch = CountDownLatch(100)
+        val results = Collections.synchronizedList(mutableListOf<Result<UserBalanceDto>>())
 
         // when
-        CompletableFuture.allOf(thread1, thread2).join()
-        val result = balanceService.getUserBalance(saveUser.id)
+        try {
+            repeat(100) {
+                executor.submit {
+                    try {
+                        val balanceChargeDto = BalanceChargeDto(
+                            userId = saveUser.id,
+                            amount = 500
+                        )
+
+                        val result = kotlin.runCatching {
+                            balanceFacade.charge(balanceChargeDto)
+                        }
+                        results.add(result)
+                    } finally {
+                        latch.countDown()
+                    }
+                }
+            }
+        } finally {
+            executor.shutdown()
+        }
+        latch.await()
 
         // then
-        assertThat(result.userId).isEqualTo(saveUser.id)
-        assertThat(result.currentAmount).isEqualTo(balance.amount + balanceChargeDto1.amount + balanceChargeDto2.amount)
+        val successCount = results.count{ it.isSuccess }
+        val failCount = results.count{ it.isFailure }
 
-        // 실행 중인 스레드 풀 종료
-        executor.shutdown()
-        executor.awaitTermination(5, TimeUnit.SECONDS)
+        assertThat(successCount).isEqualTo(1)
+        assertThat(failCount).isEqualTo(99)
+
+        val resultUserBalance = balanceService.getUserBalance(saveUser.id)
+        assertThat(resultUserBalance.currentAmount).isEqualTo(1000)
+
     }
 }

@@ -16,6 +16,9 @@ class Balance(
     var user: User = user
         protected set
 
+    @Version
+    var version: Long = 0
+
     @Column(name = "amount", nullable = false)
     var amount: Int = amount
         protected set
