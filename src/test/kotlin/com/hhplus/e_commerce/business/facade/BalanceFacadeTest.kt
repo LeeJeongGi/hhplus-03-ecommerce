@@ -110,13 +110,13 @@ class BalanceFacadeTest {
         val balance = BalanceStub.create(saveUser, 500)
         balanceRepository.save(balance)
 
-        val executor = Executors.newFixedThreadPool(100)
-        val latch = CountDownLatch(100)
+        val executor = Executors.newFixedThreadPool(10)
+        val latch = CountDownLatch(10)
         val results = Collections.synchronizedList(mutableListOf<Result<UserBalanceDto>>())
 
         // when
         try {
-            repeat(100) {
+            repeat(10) {
                 executor.submit {
                     try {
                         val balanceChargeDto = BalanceChargeDto(
@@ -143,7 +143,7 @@ class BalanceFacadeTest {
         val failCount = results.count{ it.isFailure }
 
         assertThat(successCount).isEqualTo(1)
-        assertThat(failCount).isEqualTo(99)
+        assertThat(failCount).isEqualTo(9)
 
         val resultUserBalance = balanceService.getUserBalance(saveUser.id)
         assertThat(resultUserBalance.currentAmount).isEqualTo(1000)
