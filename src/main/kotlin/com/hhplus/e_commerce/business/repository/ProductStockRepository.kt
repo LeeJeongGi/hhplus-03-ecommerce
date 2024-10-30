@@ -13,4 +13,8 @@ interface ProductStockRepository {
     fun saveAll(productStocks: List<ProductStock>)
 
     fun deleteAll()
+
+    fun findByIds(productStockIds: List<Long>): List<ProductStock>
+
+    fun findExistingIds(productStockIds: List<Long>): List<Long>
 }

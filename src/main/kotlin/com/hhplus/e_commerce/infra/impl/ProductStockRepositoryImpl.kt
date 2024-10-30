@@ -31,4 +31,12 @@ class ProductStockRepositoryImpl(
         productStockJpaRepository.deleteAll()
     }
 
+    override fun findByIds(productStockIds: List<Long>): List<ProductStock> {
+        return productStockJpaRepository.findByIds(productStockIds)
+    }
+
+    override fun findExistingIds(productStockIds: List<Long>): List<Long> {
+        return productStockJpaRepository.findExistingIds(productStockIds)
+    }
+
 }
