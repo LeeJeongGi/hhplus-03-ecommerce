@@ -16,6 +16,18 @@ spring:
     open-in-view: false
     show-sql: true
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          redis: DEBUG
+
 springdoc:
   swagger-ui:
     path: /api-docs/
