@@ -41,7 +41,7 @@ class BalanceServiceTest {
             amount = rechargeAmount,
         )
 
-        every { balanceRepository.findByUserIdWithLock(userId) } returns balance
+        every { balanceRepository.findByUserId(userId) } returns balance
 
         // when
         val updateBalance = balanceService.updateCharge(balanceChargeDto, saveUser)
@@ -67,7 +67,7 @@ class BalanceServiceTest {
             amount = rechargeAmount,
         )
 
-        every { balanceRepository.findByUserIdWithLock(userId) } returns balance
+        every { balanceRepository.findByUserId(userId) } returns balance
 
         // when
         val updateBalance = balanceService.updateCharge(balanceChargeDto, saveUser)
@@ -90,7 +90,7 @@ class BalanceServiceTest {
             userId = userId,
             amount = rechargeAmount,
         )
-        every { balanceRepository.findByUserIdWithLock(userId) } returns null
+        every { balanceRepository.findByUserId(userId) } returns null
 
         val newBalance = BalanceStub.create(saveUser, rechargeAmount)
         every { balanceRepository.save(any()) } returns newBalance
