@@ -13,8 +13,19 @@ class ProductStockService(
 ) {
 
     fun valid(productOrders: List<ProductOrderDto>): List<ProductOrderDto> {
+
+        val productStockIds = productOrders.map { it -> it.productStockId }
+
+        val existingIds = productStockRepository.findExistingIds(productStockIds)
+        if (productStockIds.size != existingIds.size) {
+            throw BusinessException.NotFound(ErrorCode.Product.NOT_FOUND_PRODUCT)
+        }
+
+        val productStocks = productStockRepository.findByIdsWithLock(productStockIds)
+            .associateBy { it.productId }
+
         productOrders.forEach { productOrder ->
-            val productStock = productStockRepository.findByIdWithLock(productOrder.productStockId)
+            val productStock = productStocks[productOrder.productStockId]
                 ?: throw BusinessException.NotFound(ErrorCode.Product.NOT_FOUND_PRODUCT)
 
             if (productStock.quantity < productOrder.quantity) {

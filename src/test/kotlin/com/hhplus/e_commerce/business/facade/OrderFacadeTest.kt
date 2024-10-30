@@ -12,6 +12,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.time.Duration
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
@@ -41,6 +42,7 @@ class OrderFacadeTest {
     @Test
     @DisplayName("주문 동시성 통합 테스트 - 재고가 50개 있을 때 100번 요청 후 성공 50, 실패 50 검증 테스트")
     fun saveIntegrationTest() {
+        val startTime = System.nanoTime()
 
         val user = UserStub.create("lee")
         val saveUser = userRepository.save(user)
@@ -58,14 +60,14 @@ class OrderFacadeTest {
         )
         val saveProductStock = productStockRepository.save(productStock)
 
-        val executor = Executors.newFixedThreadPool(100)
-        val lectureLatch = CountDownLatch(100)
-        val cnt = AtomicInteger(0)
-        val failResults = mutableListOf<Exception?>()
+        val executor = Executors.newFixedThreadPool(1000)
+        val lectureLatch = CountDownLatch(1000)
+        val successCnt = AtomicInteger(0)
+        val failCnt = AtomicInteger(0)
 
         // when && then
         try {
-            repeat(100) {
+            repeat(1000) {
                 executor.submit {
                     try {
                         val orderSaveDto = OrderSaveDto(
@@ -80,9 +82,9 @@ class OrderFacadeTest {
                         )
 
                         val saveResult = orderFacade.saveOrder(orderSaveDto)
-                        cnt.incrementAndGet()
+                        successCnt.incrementAndGet()
                     } catch (ex: BusinessException) {
-                        failResults.add(ex)
+                        failCnt.incrementAndGet()
                     } finally {
                         lectureLatch.countDown()
                     }
@@ -90,15 +92,18 @@ class OrderFacadeTest {
             }
             lectureLatch.await()
 
-            assertThat(cnt.get()).isEqualTo(50)
+            assertThat(successCnt.get()).isEqualTo(50)
 
             val successResults = orderItemRepository.findByProductStockId(saveProductStock.id!!)
             assertThat(successResults.size).isEqualTo(50)
-            assertThat(failResults.size).isEqualTo(50)
+            assertThat(failCnt.get()).isEqualTo(950)
 
         } finally {
             executor.shutdown()
         }
+        val endTime = System.nanoTime()
+        val duration = Duration.ofNanos(endTime - startTime)
 
+        println("테스트 실행 시간: ${duration.toMillis()} 밀리초")
     }
 }
