@@ -17,6 +17,9 @@ interface ProductStockJpaRepository: JpaRepository<ProductStock, Long> {
     @Query("SELECT p FROM ProductStock p WHERE p.id IN :productStockIds")
     fun findByIdsWithLock(@Param("productStockIds") productStockIds: List<Long>): List<ProductStock>
 
+    @Query("SELECT p FROM ProductStock p WHERE p.id IN :productStockIds")
+    fun findByProductIds(@Param("productStockIds") productStockIds: List<Long>): List<ProductStock>
+
     @Query("SELECT p.id FROM ProductStock p WHERE p.id IN :productStockIds")
     fun findExistingIds(productStockIds: List<Long>): List<Long>
 }

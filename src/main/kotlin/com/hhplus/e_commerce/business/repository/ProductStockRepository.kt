@@ -16,5 +16,7 @@ interface ProductStockRepository {
 
     fun findByIdsWithLock(productStockIds: List<Long>): List<ProductStock>
 
+    fun findByProductIds(productStockIds: List<Long>): List<ProductStock>
+
     fun findExistingIds(productStockIds: List<Long>): List<Long>
 }

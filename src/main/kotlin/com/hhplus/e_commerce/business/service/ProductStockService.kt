@@ -21,7 +21,7 @@ class ProductStockService(
             throw BusinessException.NotFound(ErrorCode.Product.NOT_FOUND_PRODUCT)
         }
 
-        val productStocks = productStockRepository.findByIdsWithLock(productStockIds)
+        val productStocks = productStockRepository.findByProductIds(productStockIds)
             .associateBy { it.productId }
 
         productOrders.forEach { productOrder ->
