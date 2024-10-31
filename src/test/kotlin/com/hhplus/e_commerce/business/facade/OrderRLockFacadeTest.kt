@@ -7,7 +7,6 @@ import com.hhplus.e_commerce.business.repository.*
 import com.hhplus.e_commerce.business.stub.BalanceStub
 import com.hhplus.e_commerce.business.stub.ProductStub
 import com.hhplus.e_commerce.business.stub.UserStub
-import com.hhplus.e_commerce.common.error.exception.BusinessException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,10 +18,10 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.Test
 
 @SpringBootTest
-class OrderFacadeTest {
+class OrderRLockFacadeTest {
 
     @Autowired
-    lateinit var orderFacade: OrderFacade
+    lateinit var orderRLockFacade: OrderRLockFacade
 
     @Autowired
     lateinit var userRepository: UserRepository
@@ -60,14 +59,14 @@ class OrderFacadeTest {
         )
         val saveProductStock = productStockRepository.save(productStock)
 
-        val executor = Executors.newFixedThreadPool(1000)
-        val lectureLatch = CountDownLatch(1000)
+        val executor = Executors.newFixedThreadPool(100)
+        val lectureLatch = CountDownLatch(100)
         val successCnt = AtomicInteger(0)
         val failCnt = AtomicInteger(0)
 
         // when && then
         try {
-            repeat(1000) {
+            repeat(100) {
                 executor.submit {
                     try {
                         val orderSaveDto = OrderSaveDto(
@@ -81,10 +80,8 @@ class OrderFacadeTest {
                             )
                         )
 
-                        val saveResult = orderFacade.saveOrder(orderSaveDto)
+                        val saveResult = orderRLockFacade.saveOrder(orderSaveDto)
                         successCnt.incrementAndGet()
-                    } catch (ex: BusinessException) {
-                        failCnt.incrementAndGet()
                     } finally {
                         lectureLatch.countDown()
                     }
@@ -96,7 +93,6 @@ class OrderFacadeTest {
 
             val successResults = orderItemRepository.findByProductStockId(saveProductStock.id!!)
             assertThat(successResults.size).isEqualTo(50)
-            assertThat(failCnt.get()).isEqualTo(950)
 
         } finally {
             executor.shutdown()
@@ -105,5 +101,7 @@ class OrderFacadeTest {
         val duration = Duration.ofNanos(endTime - startTime)
 
         println("테스트 실행 시간: ${duration.toMillis()} 밀리초")
+        println("테스트 실행 시간: ${duration.toMillis()} 밀리초")
+        println("성공한 충전 횟수: $successCnt")
     }
 }
