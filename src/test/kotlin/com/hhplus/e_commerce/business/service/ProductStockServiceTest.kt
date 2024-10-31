@@ -39,7 +39,7 @@ class ProductStockServiceTest {
         val productStock2 = ProductStockStub.create(productId = 2L, size = "L", quantity = 5)
 
         every { productStockRepository.findExistingIds(listOf(1L, 2L)) } returns listOf(1L, 2L)
-        every { productStockRepository.findByIdsWithLock(listOf(1L, 2L)) } returns listOf(productStock1, productStock2)
+        every { productStockRepository.findByProductIds(listOf(1L, 2L)) } returns listOf(productStock1, productStock2)
 
         // when
         val result = productStockService.valid(productOrders)
@@ -82,7 +82,7 @@ class ProductStockServiceTest {
         val productStock = ProductStockStub.create(productId = 1L, size = "M", quantity = 1)
 
         every { productStockRepository.findExistingIds(listOf(1L)) } returns listOf(1L)
-        every { productStockRepository.findByIdsWithLock(listOf(1L)) } returns listOf(productStock)
+        every { productStockRepository.findByProductIds(listOf(1L)) } returns listOf(productStock)
 
         // when & then
         val message = assertThrows<BusinessException.BadRequest> {

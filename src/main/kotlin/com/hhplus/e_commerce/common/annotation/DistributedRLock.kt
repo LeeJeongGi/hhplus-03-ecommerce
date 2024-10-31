@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit
 @Retention(AnnotationRetention.RUNTIME)
 annotation class DistributedRLock(
     val key: String,
-    val waitTime: Long = 10,
-    val leaseTime: Long = 5,
+    val waitTime: Long = 5,
+    val leaseTime: Long = 10,
     val timeUnit: TimeUnit = TimeUnit.SECONDS,
 )

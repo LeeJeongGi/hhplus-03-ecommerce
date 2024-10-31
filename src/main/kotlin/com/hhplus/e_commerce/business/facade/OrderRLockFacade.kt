@@ -11,7 +11,8 @@ class OrderRLockFacade(
 ) {
 
     @DistributedRLock(
-        key = "'userId:' + #{balanceChargeDto.userId}",
+        key = "'userId:' + #{orderSaveDto.userId} + " +
+                "':products:' + #{orderSaveDto.products.![productId].join(',')}",
         waitTime = 5,
         leaseTime = 10,
     )
