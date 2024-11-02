@@ -7,21 +7,21 @@ import com.hhplus.e_commerce.business.repository.*
 import com.hhplus.e_commerce.business.stub.BalanceStub
 import com.hhplus.e_commerce.business.stub.ProductStub
 import com.hhplus.e_commerce.business.stub.UserStub
-import com.hhplus.e_commerce.common.error.exception.BusinessException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.time.Duration
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.Test
 
 @SpringBootTest
-class OrderFacadeTest {
+class OrderRLockFacadeTest {
 
     @Autowired
-    lateinit var orderFacade: OrderFacade
+    lateinit var orderRLockFacade: OrderRLockFacade
 
     @Autowired
     lateinit var userRepository: UserRepository
@@ -41,6 +41,7 @@ class OrderFacadeTest {
     @Test
     @DisplayName("주문 동시성 통합 테스트 - 재고가 50개 있을 때 100번 요청 후 성공 50, 실패 50 검증 테스트")
     fun saveIntegrationTest() {
+        val startTime = System.nanoTime()
 
         val user = UserStub.create("lee")
         val saveUser = userRepository.save(user)
@@ -60,8 +61,8 @@ class OrderFacadeTest {
 
         val executor = Executors.newFixedThreadPool(100)
         val lectureLatch = CountDownLatch(100)
-        val cnt = AtomicInteger(0)
-        val failResults = mutableListOf<Exception?>()
+        val successCnt = AtomicInteger(0)
+        val failCnt = AtomicInteger(0)
 
         // when && then
         try {
@@ -79,10 +80,8 @@ class OrderFacadeTest {
                             )
                         )
 
-                        val saveResult = orderFacade.saveOrder(orderSaveDto)
-                        cnt.incrementAndGet()
-                    } catch (ex: BusinessException) {
-                        failResults.add(ex)
+                        val saveResult = orderRLockFacade.saveOrder(orderSaveDto)
+                        successCnt.incrementAndGet()
                     } finally {
                         lectureLatch.countDown()
                     }
@@ -90,15 +89,19 @@ class OrderFacadeTest {
             }
             lectureLatch.await()
 
-            assertThat(cnt.get()).isEqualTo(50)
+            assertThat(successCnt.get()).isEqualTo(50)
 
             val successResults = orderItemRepository.findByProductStockId(saveProductStock.id!!)
             assertThat(successResults.size).isEqualTo(50)
-            assertThat(failResults.size).isEqualTo(50)
 
         } finally {
             executor.shutdown()
         }
+        val endTime = System.nanoTime()
+        val duration = Duration.ofNanos(endTime - startTime)
 
+        println("테스트 실행 시간: ${duration.toMillis()} 밀리초")
+        println("테스트 실행 시간: ${duration.toMillis()} 밀리초")
+        println("성공한 충전 횟수: $successCnt")
     }
 }

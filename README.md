@@ -58,3 +58,7 @@ src/main/kotlin/com/hhplus/e_commerce
 3. [결제 통합 테스트](./docs/PaymentIntegration.md)
 
 -> [Chapter2 회고록](https://leejeonggi.tistory.com/entry/%EB%AA%A9%ED%91%9C%EC%9D%98-%EC%A4%91%EA%B0%84-%EC%A7%80%EC%A0%90%EC%97%90%EC%84%9C-%EB%8F%8C%EC%95%84%EB%B3%B4%EB%A9%B0)
+
+---
+
+### -> [동시성 처리 보고서](./docs/Concurrency_Lock.md)

@@ -16,7 +16,7 @@ class BalanceService(
 
     fun updateCharge(balanceChargeDto: BalanceChargeDto, user: User): UserBalanceDto {
 
-        val balance = balanceRepository.findByUserIdWithLock(balanceChargeDto.userId)?.apply {
+        val balance = balanceRepository.findByUserId(balanceChargeDto.userId)?.apply {
             updateAmount(balanceChargeDto.amount)
         } ?: balanceRepository.save(
             Balance(
