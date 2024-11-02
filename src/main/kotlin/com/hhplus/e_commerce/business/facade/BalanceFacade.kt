@@ -21,10 +21,6 @@ class BalanceFacade(
     @Transactional
     fun charge(balanceChargeDto: BalanceChargeDto): UserBalanceDto {
 
-        if (balanceChargeDto.amount < 0) {
-            throw BusinessException.BadRequest(ErrorCode.Balance.BAD_REQUEST_BALANCE)
-        }
-
         val user = userRepository.findById(balanceChargeDto.userId)
             ?: throw BusinessException.NotFound(ErrorCode.User.NOT_FOUND_USER)
 
