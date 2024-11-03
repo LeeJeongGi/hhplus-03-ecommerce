@@ -534,7 +534,7 @@ class ProductStockService(
 - 분산 락은 여러 서버에서 동시에 접근하는 공유 자원에 동시성을 제어하기 위해 사용한다.
 - Redis를 이용해 커스텀 어노테이션과 함께 AOP를 통해 구현했다.
 
-`Spimple Lock 코드 구현`
+`Simple Lock 코드 구현`
 
 ```kotlin
 @Component
