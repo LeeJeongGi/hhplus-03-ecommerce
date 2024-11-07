@@ -94,9 +94,11 @@
 단순 조회하는 로직이지만 캐시 적용했을 때 성능이 확실히 좋아지는걸 확인했습니다.
 
 1. 잔액 조회
+
 ![img.png](../images/cache_balance_test_img.png)
 
 2. 상품 조회
+
 ![img.png](../images/cache_product_test_img.png)
 
 
