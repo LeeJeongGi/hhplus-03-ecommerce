@@ -5,11 +5,8 @@ import com.hhplus.e_commerce.business.dto.UserBalanceDto
 import com.hhplus.e_commerce.business.entity.Balance
 import com.hhplus.e_commerce.business.entity.User
 import com.hhplus.e_commerce.business.repository.BalanceRepository
-import com.hhplus.e_commerce.common.config.CacheConfig
 import com.hhplus.e_commerce.common.error.code.ErrorCode
 import com.hhplus.e_commerce.common.error.exception.BusinessException
-import org.springframework.cache.annotation.CacheEvict
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 
 @Service
@@ -31,12 +28,6 @@ class BalanceService(
         return UserBalanceDto.from(balance)
     }
 
-    @Cacheable(
-        cacheNames = [CacheConfig.BALANCE_CACHE],
-        key = "#userId",
-        condition = "#userId != null",
-        sync = true,
-    )
     fun getUserBalance(userId: Long): UserBalanceDto {
         val userBalance =  balanceRepository.findByUserId(userId)
             ?: throw BusinessException.NotFound(ErrorCode.User.NOT_FOUND_USER)
@@ -44,10 +35,6 @@ class BalanceService(
         return UserBalanceDto.from(userBalance)
     }
 
-    @CacheEvict(
-        cacheNames = [CacheConfig.BALANCE_CACHE],
-        key = "#userId",
-    )
     fun changeBalance(userId: Long, totalAmount: Int): UserBalanceDto {
         val userBalance =  balanceRepository.findByUserIdWithLock(userId)
             ?: throw BusinessException.NotFound(ErrorCode.User.NOT_FOUND_USER)
