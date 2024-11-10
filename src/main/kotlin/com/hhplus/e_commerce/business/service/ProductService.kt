@@ -5,8 +5,10 @@ import com.hhplus.e_commerce.business.dto.ProductStatsDto
 import com.hhplus.e_commerce.business.dto.ProductSubDto
 import com.hhplus.e_commerce.business.repository.ProductOrderStatsRepository
 import com.hhplus.e_commerce.business.repository.ProductRepository
+import com.hhplus.e_commerce.common.config.CacheConfig
 import com.hhplus.e_commerce.common.error.code.ErrorCode
 import com.hhplus.e_commerce.common.error.exception.BusinessException
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -19,6 +21,12 @@ class ProductService(
     private val productOrderStatsRepository: ProductOrderStatsRepository
 ) {
 
+    @Cacheable(
+        cacheNames = [CacheConfig.PRODUCT_META_CACHE],
+        key = "#productId",
+        condition = "#productId != null",
+        sync = true
+    )
     fun getProductMetaInfo(productId: Long): ProductMetaDto {
         val product = productRepository.findById(productId)
             ?: throw BusinessException.NotFound(ErrorCode.Product.NOT_FOUND_PRODUCT)
