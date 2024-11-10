@@ -18,38 +18,31 @@ class CacheConfig {
         return RedisCacheManagerBuilderCustomizer { builder ->
             builder.withCacheConfiguration(
                 BALANCE_CACHE,
-                RedisCacheConfiguration.defaultCacheConfig()
-                    .computePrefixWith{ "$it::"}
-                    .entryTtl(Duration.ofHours(24))
-                    .disableCachingNullValues()
-                    .serializeKeysWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(
-                            StringRedisSerializer(),
-                        ),
-                    ).serializeValuesWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(
-                            GenericJackson2JsonRedisSerializer(),
-                        ),
-                    )
+                createCacheConfiguration(Duration.ofHours(24))
             )
 
             builder.withCacheConfiguration(
                 PRODUCT_META_CACHE,
-                RedisCacheConfiguration.defaultCacheConfig()
-                    .computePrefixWith{ "$it::"}
-                    .entryTtl(Duration.ofHours(48))
-                    .disableCachingNullValues()
-                    .serializeKeysWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(
-                            StringRedisSerializer(),
-                        )
-                    ).serializeValuesWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(
-                            GenericJackson2JsonRedisSerializer(),
-                        ),
-                    )
+                createCacheConfiguration(Duration.ofHours(48))
             )
         }
+    }
+
+    private fun createCacheConfiguration(ttl: Duration): RedisCacheConfiguration {
+        return RedisCacheConfiguration.defaultCacheConfig()
+            .computePrefixWith { "$it::" }
+            .entryTtl(ttl)
+            .disableCachingNullValues()
+            .serializeKeysWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(
+                    StringRedisSerializer()
+                )
+            )
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(
+                    GenericJackson2JsonRedisSerializer()
+                )
+            )
     }
 
     companion object {
