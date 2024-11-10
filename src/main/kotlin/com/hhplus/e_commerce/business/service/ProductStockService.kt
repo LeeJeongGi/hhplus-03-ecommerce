@@ -3,8 +3,10 @@ package com.hhplus.e_commerce.business.service
 import com.hhplus.e_commerce.business.dto.ProductOrderDto
 import com.hhplus.e_commerce.business.entity.ProductStock
 import com.hhplus.e_commerce.business.repository.ProductStockRepository
+import com.hhplus.e_commerce.common.config.CacheConfig
 import com.hhplus.e_commerce.common.error.code.ErrorCode
 import com.hhplus.e_commerce.common.error.exception.BusinessException
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Service
 
 @Service
@@ -47,6 +49,10 @@ class ProductStockService(
 
             // 수량 업데이트
             productStock.updateQuantity(updatedQuantity)
+
+            // productId별로 캐시 무효화 처리
+            evictProductMetaCache(productStock.productId)
+
             productStock
         }
 
@@ -54,5 +60,10 @@ class ProductStockService(
         productStockRepository.saveAll(productStocksToUpdate)
 
         return productOrders
+    }
+
+    @CacheEvict(cacheNames = [CacheConfig.PRODUCT_META_CACHE], key = "#productId")
+    fun evictProductMetaCache(productId: Long) {
+        // 이 메서드는 단순히 캐시 무효화를 위해 사용
     }
 }

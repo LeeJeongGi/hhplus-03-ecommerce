@@ -30,14 +30,14 @@ class DistributedRLockAspect(
             val available = rLock.tryLock(distributeRLock.waitTime, distributeRLock.leaseTime, distributeRLock.timeUnit)
 
             if (!available) {
-                throw BusinessException.BadRequest(ErrorCode.Common.BAD_REQUEST)
+                throw BusinessException.BadRequest(ErrorCode.Common.LOCK_ACQUISITION_FAILED)
             }
 
             return redisRLock.proceed(joinPoint)
 
         } catch (e: Exception) {
             Thread.currentThread().interrupt()
-            throw BusinessException.BadRequest(ErrorCode.Common.BAD_REQUEST)
+            throw BusinessException.BadRequest(ErrorCode.Common.LOCK_ACQUISITION_FAILED)
         } finally {
             rLock.unlock()
         }

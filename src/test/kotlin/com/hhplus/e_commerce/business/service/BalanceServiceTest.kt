@@ -14,6 +14,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.system.measureTimeMillis
 import kotlin.test.Test
 
 @ExtendWith(MockKExtension::class)
@@ -134,5 +135,31 @@ class BalanceServiceTest {
 
         // then
         assertThat(userBalance.currentAmount).isEqualTo(balance.amount)
+    }
+
+    @Test
+    @DisplayName("캐시 적용 여부에 따른 유저 잔액 조회 성능 테스트")
+    fun getUserBalancePerformanceTest() {
+        // given
+        val userId = 1L
+        val user = UserStub.create("User")
+        val balance = BalanceStub.create(user, 1000)
+        every { balanceRepository.findByUserId(userId) } returns balance
+
+        // 캐시가 없는 상태에서 성능 측정
+        val timeWithoutCache = measureTimeMillis {
+            repeat(100000) { balanceService.getUserBalance(userId) }
+        }
+
+        // 캐시가 있는 상태에서 성능 측정
+        balanceService.getUserBalance(userId) // 캐시 저장
+        val timeWithCache = measureTimeMillis {
+            repeat(100000) { balanceService.getUserBalance(userId) }
+        }
+
+        println("캐시 미적용 상태 조회 시간: ${timeWithoutCache}ms")
+        println("캐시 적용 상태 조회 시간: ${timeWithCache}ms")
+
+        assertThat(timeWithCache).isLessThan(timeWithoutCache)
     }
 }
