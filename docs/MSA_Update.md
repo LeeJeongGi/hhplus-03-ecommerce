@@ -27,7 +27,6 @@ SAGA 패턴을 통해 각 단계의 상태를 관리하고 실패 시 보상 조
 ---
 ## 결제 로직 분석
 
-### 주문 정보 조회 (findOrderById)
 ```kotlin
 @Transactional
 fun saveOrder(orderSaveDto: OrderSaveDto): OrderSaveResultDto {
