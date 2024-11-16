@@ -3,15 +3,16 @@ package com.hhplus.e_commerce.business.event
 import com.hhplus.e_commerce.business.dto.PaymentSaveResultDto
 import com.hhplus.e_commerce.common.error.code.ErrorCode
 import com.hhplus.e_commerce.common.error.exception.BusinessException
-import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
+import org.springframework.transaction.event.TransactionPhase
+import org.springframework.transaction.event.TransactionalEventListener
 
 @Component
 class OrderEventListener {
 
     @Async
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun listen(event: OrderCompletedEvent) {
         try {
             logOrderCompletion(event.paymentSaveResultDto)
