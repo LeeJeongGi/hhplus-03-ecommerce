@@ -3,6 +3,10 @@ package com.hhplus.e_commerce.business.entity
 import jakarta.persistence.*
 
 @Entity
+@Table(
+    name = "balance",
+    indexes = [Index(name = "idx_user_id", columnList = "user_id")]
+)
 class Balance(
     user: User,
     amount: Int,

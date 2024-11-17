@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 
 @Aspect
 @Component
-class DistributedRLockAspect(
+class DistributedLockAspect(
     val redissonClient: RedissonClient,
     val redisRLock: RedisRLock
 ) {

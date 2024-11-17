@@ -3,7 +3,12 @@ package com.hhplus.e_commerce.business.entity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "product_stock")
+@Table(
+    name = "product_stock",
+    indexes = [
+        Index(name = "idx_product_id", columnList = "product_id"),
+    ]
+)
 class ProductStock(
     @Column(name = "product_id", nullable = false)
     val productId: Long,

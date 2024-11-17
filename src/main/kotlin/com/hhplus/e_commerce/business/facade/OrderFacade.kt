@@ -19,7 +19,7 @@ class OrderFacade(
     fun saveOrder(orderSaveDto: OrderSaveDto): OrderSaveResultDto {
 
         // 상품 존재 하는지 조회
-        val orderProducts = productStockService.valid(orderSaveDto.products)
+        val orderProducts = productStockService.verifyProductAvailability(orderSaveDto.products)
 
         // 유저 조회 - 유저 잔액 검증
         val userBalance = balanceService.getUserBalance(orderSaveDto.userId)
