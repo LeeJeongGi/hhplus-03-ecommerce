@@ -14,7 +14,7 @@ class ProductStockService(
     private val productStockRepository: ProductStockRepository
 ) {
 
-    fun valid(productOrders: List<ProductOrderDto>): List<ProductOrderDto> {
+    fun verifyProductAvailability(productOrders: List<ProductOrderDto>): List<ProductOrderDto> {
 
         val productStockIds = productOrders.map { it -> it.productStockId }
 
