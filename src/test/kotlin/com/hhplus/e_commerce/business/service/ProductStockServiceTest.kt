@@ -28,7 +28,7 @@ class ProductStockServiceTest {
 
     @Test
     @DisplayName("주문 상품 검증 성공 테스트 - 주문한 상품이 존재하고 수량이 존재하는지 검증하는 테스트")
-    fun validTest() {
+    fun verifyProductAvailabilityTest() {
         // given
         val productOrders = listOf(
             ProductOrderDto(productStockId = 1L, quantity = 2),
@@ -42,7 +42,7 @@ class ProductStockServiceTest {
         every { productStockRepository.findByProductIds(listOf(1L, 2L)) } returns listOf(productStock1, productStock2)
 
         // when
-        val result = productStockService.valid(productOrders)
+        val result = productStockService.verifyProductAvailability(productOrders)
 
         // then
         assertThat(result.size).isEqualTo(productOrders.size)
@@ -54,7 +54,7 @@ class ProductStockServiceTest {
 
     @Test
     @DisplayName("주문 상품 검증 실패 테스트 - 상품이 존재하지 않는 경우 예외가 발생하는지 검증하는 테스트")
-    fun validProductNotFound() {
+    fun verifyProductAvailabilityProductNotFound() {
         // given
         val productOrders = listOf(
             ProductOrderDto(productStockId = 1L, quantity = 5)
@@ -65,7 +65,7 @@ class ProductStockServiceTest {
 
         // when & then
         val message = assertThrows<BusinessException.NotFound> {
-            productStockService.valid(productOrders)
+            productStockService.verifyProductAvailability(productOrders)
         }.message
 
         assertThat(message).isEqualTo(ErrorCode.Product.NOT_FOUND_PRODUCT.message)
@@ -86,7 +86,7 @@ class ProductStockServiceTest {
 
         // when & then
         val message = assertThrows<BusinessException.BadRequest> {
-            productStockService.valid(productOrders)
+            productStockService.verifyProductAvailability(productOrders)
         }.message
 
         assertThat(message).isEqualTo(ErrorCode.Product.OUT_OF_STOCK.message)
