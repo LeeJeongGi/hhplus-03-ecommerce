@@ -7,7 +7,6 @@ import jakarta.persistence.*
     name = "product_stock",
     indexes = [
         Index(name = "idx_product_id", columnList = "product_id"),
-        Index(name = "idx_size", columnList = "size")
     ]
 )
 class ProductStock(
