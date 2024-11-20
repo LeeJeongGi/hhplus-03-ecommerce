@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: hhplus-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: hhplus
+      MYSQL_USER: lee
+      MYSQL_PASSWORD: Ecommerce!@
+    ports:
+      - "3306:3306"
+    networks:
+      - app-net
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    container_name: hhplus-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-net
+
+  # Zookeeper 서비스
+  zookeeper1:
+    image: 'bitnami/zookeeper'
+    container_name: zookeeper1
+    hostname: 'zookeeper1'
+    restart: always
+    ports:
+      - '2181:2181'  # Zookeeper 클라이언트 포트
+    environment:
+      - ZOO_SERVER_ID=1
+      - ZOO_SERVERS=zookeeper1:2888:3888::1
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    user: root
+    networks:
+      - app-net
+
+  # Kafka 브로커
+  kafka1:
+    image: 'bitnami/kafka'
+    container_name: kafka1
+    hostname: 'kafka1'
+    restart: on-failure
+    depends_on:
+      - zookeeper1
+    ports:
+      - '9092:9092'  # 외부 클라이언트 접속
+      - '9094:9094'  # 내부 브로커 간 통신
+    environment:
+      - KAFKA_BROKER_ID=1
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ENABLE_KRAFT=no
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,INTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092,INTERNAL://kafka1:9094
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper1:2181
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL
+    user: root
+    networks:
+      - app-net
+
+  # Kafka UI
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    hostname: kafka-ui
+    restart: always
+    depends_on:
+      - kafka1
+    ports:
+      - "8989:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=kafka1
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka1:9094
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper1:2181
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  mysql-data:
