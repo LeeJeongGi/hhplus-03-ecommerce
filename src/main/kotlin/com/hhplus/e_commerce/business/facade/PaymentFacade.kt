@@ -2,7 +2,8 @@ package com.hhplus.e_commerce.business.facade
 
 import com.hhplus.e_commerce.business.dto.PaymentSaveDto
 import com.hhplus.e_commerce.business.dto.PaymentSaveResultDto
-import com.hhplus.e_commerce.business.event.OrderEventPublisher
+import com.hhplus.e_commerce.business.event.PaymentApiPublisher
+import com.hhplus.e_commerce.business.facade.dto.OutboxMessageDto
 import com.hhplus.e_commerce.business.service.BalanceService
 import com.hhplus.e_commerce.business.service.OrderService
 import com.hhplus.e_commerce.business.service.PaymentService
@@ -16,7 +17,7 @@ class PaymentFacade(
     private val orderService: OrderService,
     private val balanceService: BalanceService,
     private val paymentService: PaymentService,
-    private val orderEventPublisher: OrderEventPublisher
+    private val paymentApiPublisher: PaymentApiPublisher
 ) {
 
     @Transactional
@@ -50,7 +51,7 @@ class PaymentFacade(
         orderService.updateOrderStatus(order.orderId, "PAID")
 
         // 7. 데이터 플랫폼 이벤트 발행
-        orderEventPublisher.publishDataPlatformEvent(result)
+        paymentApiPublisher.publishDataPlatformEvent(OutboxMessageDto.from(result))
 
         return result
     }
