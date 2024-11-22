@@ -9,14 +9,14 @@ import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
 
 @Component
-class KafkaPublisherListener(
+class OutboxMessagePublisher(
     private val outboxMessageService: OutboxMessageService,
     private val messagePublisher: MessagePublisher,
 ) {
 
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    fun publishToKafka(event: OrderPaymentCompletedEvent) {
+    fun publishAndProcessOutbox(event: OrderPaymentCompletedEvent) {
 
         println("AFTER_COMMIT 단계: Kafka 메시지 발행: ${event.outboxMessageDto}")
         try {
@@ -24,11 +24,11 @@ class KafkaPublisherListener(
             messagePublisher.publish(event.outboxMessageDto)
 
             // 상태 업데이트: SUCCESS
-            outboxMessageService.updateStatus(event.outboxMessageDto.outboxMessageId, OutboxStatus.SUCCESS)
+            outboxMessageService.updateStatus(event.outboxMessageDto.outboxMessageId ?: 0, OutboxStatus.SUCCESS)
             println("AFTER_COMMIT 단계: Kafka 메시지 발행 성공 (SUCCESS 상태)")
         } catch (ex: Exception) {
             // 상태 업데이트: FAIL
-            outboxMessageService.updateStatus(event.outboxMessageDto.outboxMessageId, OutboxStatus.FAIL)
+            outboxMessageService.updateStatus(event.outboxMessageDto.outboxMessageId ?: 0, OutboxStatus.FAIL)
             println("AFTER_COMMIT 단계: Kafka 메시지 발행 실패 (FAIL 상태)")
         }
     }

@@ -16,11 +16,7 @@ class OutboxMessageService(
         return outBoxMessageRepository.save(outboxMessage)
     }
 
-    fun updateStatus(outboxMessageId: Long?, status: OutboxStatus) {
-        // Null 체크
-        if (outboxMessageId == null) {
-            throw IllegalArgumentException("OutboxMessage ID가 null입니다.")
-        }
+    fun updateStatus(outboxMessageId: Long, status: OutboxStatus) {
 
         // ID로 OutboxMessage 조회
         val outboxMessage = outBoxMessageRepository.findById(outboxMessageId)
