@@ -1,16 +1,16 @@
 package com.hhplus.e_commerce.business.event
 
-import com.hhplus.e_commerce.business.dto.PaymentSaveResultDto
+import com.hhplus.e_commerce.business.facade.dto.OutboxMessageDto
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 
 @Component
-class OrderEventPublisher(
+class PaymentApiPublisher(
     private val publisher: ApplicationEventPublisher,
 ) {
 
-    fun publishDataPlatformEvent(paymentSaveResultDto: PaymentSaveResultDto) {
-        val event = OrderCompletedEvent(paymentSaveResultDto)
+    fun publishDataPlatformEvent(outboxMessageDto: OutboxMessageDto) {
+        val event = OrderPaymentCompletedEvent.from(outboxMessageDto)
         publisher.publishEvent(event)
     }
 }
