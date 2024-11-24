@@ -63,4 +63,12 @@ sealed interface ErrorCode {
         NOT_FOUND_CART(HttpStatus.NOT_FOUND, "CARTS001", "장바구니 상품 정보를 찾을 수 없습니다."),
     }
 
+    enum class OutboxMessage(
+        override val httpStatus: HttpStatus,
+        override val errorCode: String,
+        override val message: String,
+    ) : ErrorCode {
+        NOT_FOUND_OUTBOX_MESSAGE(HttpStatus.NOT_FOUND, "OUTBOX001", "아웃 박스 메세지가 없습니다."),
+    }
+
 }
