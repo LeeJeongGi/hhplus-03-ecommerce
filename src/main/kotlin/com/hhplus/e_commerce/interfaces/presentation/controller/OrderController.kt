@@ -3,6 +3,7 @@ package com.hhplus.e_commerce.interfaces.presentation.controller
 import com.hhplus.e_commerce.business.dto.OrderSaveDto
 import com.hhplus.e_commerce.business.dto.ProductOrderDto
 import com.hhplus.e_commerce.business.facade.OrderFacade
+import com.hhplus.e_commerce.business.facade.OrderRLockFacade
 import com.hhplus.e_commerce.interfaces.presentation.request.OrderRequest
 import com.hhplus.e_commerce.interfaces.presentation.response.OrderResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/v1/orders")
 class OrderController(
-    private val orderFacade: OrderFacade
+    private val orderRLockFacade: OrderRLockFacade
 ) {
 
     /**
@@ -34,7 +35,7 @@ class OrderController(
             products = request.products.map { ProductOrderDto.from(it) }
         )
 
-        val result = orderFacade.saveOrder(orderSaveDto = orderSaveDto)
+        val result = orderRLockFacade.saveOrder(orderSaveDto = orderSaveDto)
         return ResponseEntity.ok(OrderResponse.from(result))
     }
 }

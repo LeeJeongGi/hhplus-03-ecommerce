@@ -2,6 +2,7 @@ package com.hhplus.e_commerce.interfaces.presentation.controller
 
 import com.hhplus.e_commerce.business.dto.BalanceChargeDto
 import com.hhplus.e_commerce.business.facade.BalanceFacade
+import com.hhplus.e_commerce.business.facade.BalanceSimpleLockFacade
 import com.hhplus.e_commerce.business.service.BalanceService
 import com.hhplus.e_commerce.interfaces.presentation.request.ChargeRequest
 import com.hhplus.e_commerce.interfaces.presentation.response.ChargeResponse
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*
 class BalanceController(
     private val balanceFacade: BalanceFacade,
     private val balanceService: BalanceService,
+    private val balanceSimpleLockFacade: BalanceSimpleLockFacade,
 ) {
 
     /**
@@ -28,7 +30,7 @@ class BalanceController(
         @PathVariable userId: Long,
         @RequestBody request: ChargeRequest
     ): ResponseEntity<ChargeResponse> {
-        val userBalance = balanceFacade.charge(BalanceChargeDto.of(userId, request.amount))
+        val userBalance = balanceSimpleLockFacade.charge(BalanceChargeDto.of(userId, request.amount))
         return ResponseEntity.ok(ChargeResponse.from(userBalance))
     }
 
